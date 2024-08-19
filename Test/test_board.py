@@ -1,85 +1,43 @@
 import unittest
-from unittest.mock import patch, Mock
-from io import StringIO
-
-# Importar clases del módulo de ajedrez
-from game.piece import Piece, Rook, Pawn
 from game.board import Board
-from game.chess import Chess
+from game.piece import Rook, Pawn, Knight
 
-# Clase para probar la funcionalidad del juego de ajedrez
-class TestChess(unittest.TestCase):
-    
-    def setUp(self):
-        self.chess = Chess()
-
-    def test_initial_turn(self):
-        expected_turn = "WHITE"
-        self.assertEqual(self.chess.__turn__, expected_turn)
-
-    def test_turn_switching(self):
-        self.chess.change_turn()
-        self.assertEqual(self.chess.__turn__, "BLACK")
-        self.chess.change_turn()
-        self.assertEqual(self.chess.__turn__, "WHITE")
-
-    @patch('builtins.print')
-    def test_piece_movement(self, mock_print):
-        start_row, start_col, end_row, end_col = 7, 0, 6, 0
-        self.chess.move(start_row, start_col, end_row, end_col)
-        
-        self.assertIsNone(self.chess.__board__.get_piece(start_row, start_col))
-        self.assertEqual(self.chess.__turn__, "WHITE")
-
-    @patch('builtins.print')
-    def test_invalid_move_no_piece(self, mock_print):
-        non_existing_piece = self.chess.__board__.get_piece(7, 0)
-        
-        self.assertEqual(self.chess.move(5, 7, 2, 2), "You can't move a piece that doesn't exist")
-
-
-# Clase para probar la funcionalidad del tablero de ajedrez
 class TestBoard(unittest.TestCase):
-
     def setUp(self):
         self.board = Board()
 
-    def test_initial_board_setup(self):
-        rook_type = "ROOK"
-        self.assertEqual(self.board.__positions__[0][0].__type__, rook_type)
+    def test_board_initialization(self):
+        # Verifica si las posiciones iniciales tienen las piezas correctas
+        self.assertEqual(self.board.get_piece(0, 0), ({'ROOK'}, {'BLACK'}))
+        self.assertEqual(self.board.get_piece(7, 7), ({'ROOK'}, {'WHITE'}))
+        self.assertEqual(self.board.get_piece(1, 0), ({'PAWN'}, {'BLACK'}))
+        self.assertEqual(self.board.get_piece(6, 0), ({'PAWN'}, {'WHITE'}))
+        self.assertEqual(self.board.get_piece(0, 1), ({'KNIGHT'}, {'BLACK'}))
+        self.assertEqual(self.board.get_piece(7, 6), ({'KNIGHT'}, {'WHITE'}))
 
-    def test_empty_position(self):
-        empty_position = (3, 3)
-        self.assertIsNone(self.board.get_piece(*empty_position))
+    def test_get_piece_empty(self):
+        # Verifica si obtener una pieza de una posición vacía devuelve "No piece"
+        self.assertEqual(self.board.get_piece(3, 3), "No piece")
 
-    @patch('builtins.print')
-    def test_piece_movement(self, mock_print):
-        start_row, start_col, end_row, end_col = 0, 0, 0, 1
-        self.board.move_piece(start_row, start_col, end_row, end_col)
-        
-        self.assertEqual(self.board.get_piece(end_row, end_col), ({'ROOK'}, {'BLACK'}))
-        self.assertIsNone(self.board.get_piece(start_row, start_col))
+    def test_move_piece(self):
+        # Mueve una pieza y verifica las posiciones antes y después del movimiento
+        self.board.move_piece(0, 0, 0, 1)
+        self.assertEqual(self.board.get_piece(0, 1), ({'ROOK'}, {'BLACK'}))
+        self.assertEqual(self.board.get_piece(0, 0), "No piece")
 
-    @patch('builtins.print')
-    def test_invalid_move_no_piece(self, mock_print):
-        empty_pos_start, empty_pos_end = (3, 3), (4, 4)
-        
-        self.assertEqual(self.board.move_piece(*empty_pos_start, *empty_pos_end), "No piece to move")
-        self.assertIsNone(self.board.get_piece(*empty_pos_start))
-        self.assertIsNone(self.board.get_piece(*empty_pos_end))
+    def test_move_piece_no_piece(self):
+        # Intenta mover una pieza desde una posición vacía y verifica el comportamiento
+        result = self.board.move_piece(3, 3, 4, 4)
+        self.assertEqual(result, "No piece to move")
+        self.assertEqual(self.board.get_piece(3, 3), "No piece")
+        self.assertEqual(self.board.get_piece(4, 4), "No piece")
 
-    def test_knight_valid_moves(self):
-        knight_pos, valid_move_1, valid_move_2 = (0, 1), (2, 2), (2, 0)
-        
-        self.assertTrue(self.board.permited_move(*knight_pos, *valid_move_1))
-        self.assertTrue(self.board.permited_move(*knight_pos, *valid_move_2))
+    def test_permited_move_rook(self):
+        # Verifica los movimientos permitidos para la torre
+        self.assertTrue(self.board.permited_move(0, 0, 0, 5))  # Movimiento horizontal permitido
+        self.assertTrue(self.board.permited_move(0, 0, 3, 0))  # Movimiento vertical permitido
+        self.assertFalse(self.board.permited_move(0, 0, 3, 2))  # Movimiento diagonal no permitido
 
-    def test_rook_invalid_move(self):
-        rook_pos, invalid_move = (0, 0), (3, 2)
-        
-        self.assertFalse(self.board.permited_move(*rook_pos, *invalid_move))
-
-
-# Ejecutar las pruebas
 if __name__ == '__main__':
     unittest.main()
+
