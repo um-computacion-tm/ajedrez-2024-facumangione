@@ -33,6 +33,30 @@ class TestRook(unittest.TestCase):
         # Verifica que la posición actual no esté incluida en los movimientos posibles
         moves = self.rook_black.movimientos_basicos_de_torres(0, 0)
         self.assertNotIn((0, 0), moves, "La posición actual no debe estar en los movimientos posibles")
+        
+import unittest
+from game.piece import Queen
+
+class TestQueen(unittest.TestCase):
+    def setUp(self):
+        self.queen_white = Queen("WHITE")
+        self.queen_black = Queen("BLACK")
+
+    def test_queen_type(self):
+        # Verifica que la pieza sea de tipo "QUEEN"
+        self.assertEqual(self.queen_white.__type__, "QUEEN")
+        self.assertEqual(self.queen_black.__type__, "QUEEN")
+
+    def test_queen_color(self):
+        # Verifica que la reina tiene el color correcto
+        self.assertEqual(self.queen_white.__color__, "WHITE")
+        self.assertEqual(self.queen_black.__color__, "BLACK")
+
+    def test_queen_valid_moves(self):
+        # Verifica los movimientos válidos de la reina desde el centro del tablero
+        ...
+
+
 
 
 if __name__ == '__main__':

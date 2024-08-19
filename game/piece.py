@@ -46,4 +46,32 @@ class Knight(Piece):
 class Queen(Piece):
     def __init__(self, color):
         super().__init__(color)
-        self.__type__="Queen"
+        self.__type__ = "QUEEN"
+
+    def get_valid_moves(self, row, col):
+        moves = []
+
+        # Movimientos horizontales y verticales (como la torre)
+        for i in range(8):
+            if i != row:
+                moves.append((i, col))  # Movimiento vertical
+            if i != col:
+                moves.append((row, i))  # Movimiento horizontal
+
+        # Movimientos diagonales (específicos de la reina)
+        for i in range(1, 8):
+            # Diagonal superior izquierda
+            if row - i >= 0 and col - i >= 0:
+                moves.append((row - i, col - i))
+            # Diagonal superior derecha
+            if row - i >= 0 and col + i < 8:
+                moves.append((row - i, col + i))
+            # Diagonal inferior izquierda
+            if row + i < 8 and col - i >= 0:
+                moves.append((row + i, col - i))
+            # Diagonal inferior derecha
+            if row + i < 8 and col + i < 8:
+                moves.append((row + i, col + i))
+
+        return moves
+
