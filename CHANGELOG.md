@@ -1,3 +1,6 @@
+## [0.04] - 08-20-24
+Code optimization and fix
+
 ## [0.03] - 08-19-24
 Added queen and test
 

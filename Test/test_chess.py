@@ -1,37 +1,32 @@
 import unittest
-from unittest.mock import patch, MagicMock
-from game.chess import Chess
 from game.board import Board
+from game.chess import Chess
 
 class TestChess(unittest.TestCase):
     def setUp(self):
-        self.chess = Chess()
+        #inicializa un nuevo tablero.
+        self.board = Board()
 
-    @patch.object(Board, 'get_piece', return_value="ROOK")
-    @patch.object(Board, 'move_piece')
-    def test_move_valid_piece(self, mock_move_piece, mock_get_piece):
-        # Prueba que un movimiento válido cambia de turno y mueve la pieza
-        self.chess.move(0, 0, 0, 1)
+    def test_initial_turn(self):
+        chess_game = Chess () #nueva partida
+        self.assertEqual(chess_game.turn, "WHITE") #verifico que el 1er turno sea del blanco
 
-        mock_get_piece.assert_called_once_with(0, 0)
-        mock_move_piece.assert_called_once_with(0, 0, 0, 1)
-        self.assertEqual(self.chess.__turn__, "BLACK")
+    def test_turn_change_correctly(self):
+        chess_game = Chess () #nueva partida
+        self.assertEqual(chess_game.turn, "WHITE") #verifico que el 1er turno sea del blanco
 
-    @patch.object(Board, 'get_piece', return_value="No piece")
-    def test_move_no_piece(self, mock_get_piece):
-        # Prueba que no se puede mover una pieza inexistente y no cambia de turno
-        message = self.chess.move(0, 0, 0, 1)
+        #debo de realizar un movimiento como 2do paso
+        chess_game.move (0,0,1,0) #aca supongo que el movimiento es valido (luego en el test_board verificare si lo es o no)
+        "(fila origen, columna origen, fila destino, columna destino)"
 
-        mock_get_piece.assert_called_once_with(0, 0)
-        self.assertEqual(message, "You can't move a piece that doesn't exist")
-        self.assertEqual(self.chess.__turn__, "WHITE")
 
-    def test_change_turn(self):
-        # Prueba el cambio de turno
-        self.chess.change_turn()
-        self.assertEqual(self.chess.__turn__, "BLACK")
-        self.chess.change_turn()
-        self.assertEqual(self.chess.__turn__, "WHITE")
+        #verifico el cambio de turno (que es lo que busco)
+        self.assertEqual(chess_game.turn, "BLACK")
 
-if __name__ == '__main__':
+    def test_turn_does_not_change_on_invalid_move(self):
+        chess_game = Chess()
+        chess_game.move(4, 4, 5, 5)  # Movimiento sin pieza en la posición de origen
+        self.assertEqual(chess_game.turn, "WHITE")  # El turno no debería cambiar
+        
+if __name__ == "__main__":
     unittest.main()

@@ -1,63 +1,77 @@
 import unittest
-from game.piece import Piece, Rook, Pawn
+from game.piece import Rook, Bishop, Knight, Queen, Pawn
 
-class TestPiece(unittest.TestCase):
-    def test_piece_initialization(self):
-        piece = Piece("WHITE")
-        self.assertEqual(piece.get_color(), "WHITE")
-        self.assertIsNone(piece.get_type())
-    def test_pawn_initialization(self):
-        pawn = Pawn("WHITE")
-        self.assertEqual(pawn.get_color(), "WHITE")
-        self.assertEqual(pawn.get_type(), "PAWN")
-        
 class TestRook(unittest.TestCase):
-    def setUp(self):
-        self.rook_black = Rook("BLACK")
-        self.rook_white = Rook("WHITE")
+    def test_basic_rook_moves(self):
+        rook = Rook("blanco")
+        self.assertEqual(rook.color, "blanco")
+        expected_moves = [(i, 0) for i in range(8) if i != 0] + [(0, i) for i in range(8) if i != 0]
+        self.assertEqual(rook.basic_rook_moves(0, 0), expected_moves)
 
-    def test_rook_initialization(self):
-        # Verifica que la torre se inicializa correctamente con el color adecuado
-        self.assertEqual(self.rook_black.get_color(), "BLACK", "La torre debe ser negra")
-        self.assertEqual(self.rook_white.get_color(), "WHITE", "La torre debe ser blanca")
-        
-    def test_rook_movimientos_basicos(self):
-        # Verifica los movimientos básicos de la torre desde la posición (0, 0)
-        expected_moves = [(r, 0) for r in range(1, 8)] + [(0, c) for c in range(1, 8)]
-        actual_moves = self.rook_black.movimientos_basicos_de_torres(0, 0)
+class TestBishop(unittest.TestCase):
+    def test_basic_bishop_moves(self):
+        bishop = Bishop("blanco")
+        self.assertEqual(bishop.color, "blanco")
 
-        self.assertEqual(len(actual_moves), len(expected_moves), "Debe haber 14 movimientos posibles")
-        self.assertListEqual(sorted(actual_moves), sorted(expected_moves), "Los movimientos no coinciden con los esperados")
+        expected_moves = [
+            [(2, 2), (1, 1), (0, 0)],  # Diagonal superior izquierda
+            [(2, 4), (1, 5), (0, 6)],  # Diagonal superior derecha
+            [(4, 2), (5, 1), (6, 0)],  # Diagonal inferior izquierda
+            [(4, 4), (5, 5), (6, 6), (7, 7)]  # Diagonal inferior derecha
+        ]
 
-    def test_rook_no_self_position_in_moves(self):
-        # Verifica que la posición actual no esté incluida en los movimientos posibles
-        moves = self.rook_black.movimientos_basicos_de_torres(0, 0)
-        self.assertNotIn((0, 0), moves, "La posición actual no debe estar en los movimientos posibles")
-        
-import unittest
-from game.piece import Queen
+        # Testear las cuatro direcciones diagonales
+        self.assertEqual(Bishop("blanco").basic_bishop_moves(3, 3), sum(expected_moves, []))
+
+class TestKnight(unittest.TestCase):
+    def test_basic_knight_moves(self):
+        knight = Knight("blanco")
+        self.assertEqual(knight.color, "blanco")
+
+        start_row, start_col = 4, 4
+        expected_moves = [(2, 3), (3, 2), (5, 2), (6, 3), (6, 5), (5, 6), (3, 6), (2, 5)]
+
+        self.assertEqual(set(knight.basic_knight_moves(start_row, start_col)), set(expected_moves))
 
 class TestQueen(unittest.TestCase):
-    def setUp(self):
-        self.queen_white = Queen("WHITE")
-        self.queen_black = Queen("BLACK")
+    def test_basic_queen_moves(self):
+        queen = Queen("black")
+        self.assertEqual(queen.color, "black")
 
-    def test_queen_type(self):
-        # Verifica que la pieza sea de tipo "QUEEN"
-        self.assertEqual(self.queen_white.__type__, "QUEEN")
-        self.assertEqual(self.queen_black.__type__, "QUEEN")
+        start_row, start_col = 4, 4
+        rook_moves = [(i, 4) for i in range(8) if i != 4] + [(4, i) for i in range(8) if i != 4]
+        bishop_moves = [(r, c) for r, c in [
+            (3, 3), (2, 2), (1, 1), (0, 0),  # Diagonal superior izquierda
+            (3, 5), (2, 6), (1, 7),          # Diagonal superior derecha
+            (5, 3), (6, 2), (7, 1),          # Diagonal inferior izquierda
+            (5, 5), (6, 6), (7, 7)           # Diagonal inferior derecha
+        ]]
+        expected_moves = rook_moves + bishop_moves
 
-    def test_queen_color(self):
-        # Verifica que la reina tiene el color correcto
-        self.assertEqual(self.queen_white.__color__, "WHITE")
-        self.assertEqual(self.queen_black.__color__, "BLACK")
+        self.assertEqual(set(queen.basic_queen_moves(start_row, start_col)), set(expected_moves))
 
-    def test_queen_valid_moves(self):
-        # Verifica los movimientos válidos de la reina desde el centro del tablero
-        ...
+class TestPawn(unittest.TestCase):
+    def test_basic_pawn_moves(self):
+        pawn_black = Pawn("BLACK")
+        pawn_white = Pawn("WHITE")
+        self.assertEqual(pawn_black.color, "BLACK")
+        self.assertEqual(pawn_white.color, "WHITE")
 
+        expected_moves_black = [(0, -1), (0, -2), (-1, -1), (1, -1)]
+        expected_moves_white = [(0, 1), (0, 2), (-1, 1), (1, 1)]
 
+        self.assertEqual(pawn_black.basic_pawn_moves(0, 0), expected_moves_black)
+        self.assertEqual(pawn_white.basic_pawn_moves(0, 0), expected_moves_white)
 
+    def test_eat_pieces_with_pawn(self):
+        test_cases = [
+            ("BLACK", [(7, 0), (7, 2)], 6, 1),
+            ("WHITE", [(5, 0), (5, 2)], 6, 1)
+        ]
+        
+        for color, expected_moves, start_row, start_col in test_cases:
+            pawn = Pawn(color)
+            self.assertEqual(set(pawn.eat_pieces_with_peon(start_row, start_col)), set(expected_moves))
 
 if __name__ == '__main__':
     unittest.main()

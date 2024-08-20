@@ -1,77 +1,68 @@
 class Piece:
     def __init__(self, color):
-        self.__color__ = color
-        self.__type__ = None
+        self._color = color
 
-    def get_color(self):
-        return self.__color__
+    @property
+    def color(self):
+        return self._color
 
-    def get_type(self):
-        return self.__type__
-
-
+### TORRES ###
 class Rook(Piece):
     def __init__(self, color):
         super().__init__(color)
-        
-    def movimientos_basicos_de_torres(self, row, col):
-        # Generar los movimientos de la torre
-        moves = self.__generate_vertical_moves(row, col)
-        moves.extend(self.__generate_horizontal_moves(row, col))
-        
+
+    def basic_rook_moves(self, row, col):
+        # Movimientos verticales y horizontales
+        moves = [(r, col) for r in range(8) if r != row] + \
+                [(row, c) for c in range(8) if c != col]
         return moves
-    
-    def __generate_vertical_moves(self, row, col):
-        vertical_moves = [(r, col) for r in range(8) if r != row]
-        return vertical_moves
-    
-    def __generate_horizontal_moves(self, row, col):
-        horizontal_moves = [(row, c) for c in range(8) if c != col]
-        return horizontal_moves
 
-
-
-class Pawn(Piece):
+### ALFILES ###
+class Bishop(Piece):
     def __init__(self, color):
         super().__init__(color)
-        self.__type__ = "PAWN"
 
+    def basic_bishop_moves(self, row, col):
+        # Movimientos diagonales
+        moves = []
+        for delta in range(1, 8):
+            moves += [
+                (row + delta, col + delta),
+                (row + delta, col - delta),
+                (row - delta, col + delta),
+                (row - delta, col - delta)
+            ]
+        # Filtrar movimientos fuera del tablero
+        moves = [(r, c) for r, c in moves if 0 <= r < 8 and 0 <= c < 8]
+        return moves
 
+### CABALLOS ###
 class Knight(Piece):
     def __init__(self, color):
         super().__init__(color)
-        self.__type__ = "KNIGHT"
-        
 
+    def basic_knight_moves(self, row, col):
+        # Movimientos en L
+        possible_moves = [
+            (-2, -1), (-1, -2), (1, -2), (2, -1),
+            (2, 1), (1, 2), (-1, 2), (-2, 1)
+        ]
+        moves = [(row + dr, col + dc) for dr, dc in possible_moves
+                 if 0 <= row + dr < 8 and 0 <= col + dc < 8]
+        return moves
+
+### REINAS ###
 class Queen(Piece):
     def __init__(self, color):
         super().__init__(color)
-        self.__type__ = "QUEEN"
 
-    def get_valid_moves(self, row, col):
-        moves = []
+    def basic_queen_moves(self, row, col):
+        # Movimientos de la reina (combinación de torre y alfil)
+        rook_moves = Rook(self.color).basic_rook_moves(row, col)
+        bishop_moves = Bishop(self.color).basic_bishop_moves(row, col)
+        return rook_moves + bishop_moves
 
-        # Movimientos horizontales y verticales (como la torre)
-        for i in range(8):
-            if i != row:
-                moves.append((i, col))  # Movimiento vertical
-            if i != col:
-                moves.append((row, i))  # Movimiento horizontal
-
-        # Movimientos diagonales (específicos de la reina)
-        for i in range(1, 8):
-            # Diagonal superior izquierda
-            if row - i >= 0 and col - i >= 0:
-                moves.append((row - i, col - i))
-            # Diagonal superior derecha
-            if row - i >= 0 and col + i < 8:
-                moves.append((row - i, col + i))
-            # Diagonal inferior izquierda
-            if row + i < 8 and col - i >= 0:
-                moves.append((row + i, col - i))
-            # Diagonal inferior derecha
-            if row + i < 8 and col + i < 8:
-                moves.append((row + i, col + i))
-
-        return moves
-
+### PEONES ###
+class Pawn(Piece):
+    def __init__(self, color):
+        super().__init__(color)
