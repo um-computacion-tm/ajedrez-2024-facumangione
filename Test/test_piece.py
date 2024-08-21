@@ -1,6 +1,5 @@
 import unittest
-from game.piece import Rook, Bishop, Knight, Queen, Pawn
-
+from game.piece import Rook, Bishop, Knight, Queen, Pawn, King
 class TestRook(unittest.TestCase):
     def test_basic_rook_moves(self):
         rook = Rook("blanco")
@@ -72,6 +71,23 @@ class TestPawn(unittest.TestCase):
         for color, expected_moves, start_row, start_col in test_cases:
             pawn = Pawn(color)
             self.assertEqual(set(pawn.eat_pieces_with_peon(start_row, start_col)), set(expected_moves))
+            
+
+class TestKing(unittest.TestCase):
+    def test_basic_king_moves(self):
+        king = King("black")
+        self.assertEqual(king.color, "black")
+
+        start_row, start_col = 4, 4
+
+        # Movimientos esperados del rey (una casilla en cualquier dirección)
+        expected_moves = [
+            (3, 3), (3, 4), (3, 5),  # Superior
+            (4, 3),         (4, 5),  # Lados
+            (5, 3), (5, 4), (5, 5)   # Inferior
+        ]
+
+        self.assertEqual(set(king.basic_king_moves(start_row, start_col)), set(expected_moves))
 
 if __name__ == '__main__':
     unittest.main()

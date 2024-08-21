@@ -1,3 +1,6 @@
+## [0.05] - 08-21-24
+Added King, test, and changes 
+
 ## [0.04] - 08-20-24
 Code optimization and fix
 
