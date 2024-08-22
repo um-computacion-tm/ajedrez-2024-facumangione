@@ -1,3 +1,6 @@
+## [0.06] - 08-22-24
+Added pieces in board and test 
+
 ## [0.05] - 08-21-24
 Added King, test, and changes 
 
