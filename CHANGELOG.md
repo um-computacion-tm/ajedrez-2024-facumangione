@@ -1,3 +1,6 @@
+## [0.07] - 08-23-24
+Added code in cli.py
+
 ## [0.06] - 08-22-24
 Added pieces in board and test 
 
