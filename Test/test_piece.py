@@ -1,26 +1,38 @@
 import unittest
 from game.piece import Rook, Bishop, Knight, Queen, Pawn, King
+
 class TestRook(unittest.TestCase):
     def test_basic_rook_moves(self):
         rook = Rook("blanco")
         self.assertEqual(rook.color, "blanco")
         expected_moves = [(i, 0) for i in range(8) if i != 0] + [(0, i) for i in range(8) if i != 0]
         self.assertEqual(rook.basic_rook_moves(0, 0), expected_moves)
+    
+    def test_rook_moves_out_of_bounds(self):
+        rook = Rook("blanco")
+        # Movimientos fuera del tablero desde la esquina inferior izquierda
+        self.assertEqual(rook.basic_rook_moves(0, 0), [(i, 0) for i in range(1, 8)] + [(0, i) for i in range(1, 8)])
+    
+    
 
 class TestBishop(unittest.TestCase):
     def test_basic_bishop_moves(self):
         bishop = Bishop("blanco")
         self.assertEqual(bishop.color, "blanco")
 
+        start_row, start_col = 3, 3
+
+        # Movimientos esperados en todas las diagonales desde la posición (3, 3)
         expected_moves = [
-            [(2, 2), (1, 1), (0, 0)],  # Diagonal superior izquierda
-            [(2, 4), (1, 5), (0, 6)],  # Diagonal superior derecha
-            [(4, 2), (5, 1), (6, 0)],  # Diagonal inferior izquierda
-            [(4, 4), (5, 5), (6, 6), (7, 7)]  # Diagonal inferior derecha
+            (2, 2), (1, 1), (0, 0),  # Diagonal superior izquierda
+            (2, 4), (1, 5), (0, 6),  # Diagonal superior derecha
+            (4, 2), (5, 1), (6, 0),  # Diagonal inferior izquierda
+            (4, 4), (5, 5), (6, 6), (7, 7)  # Diagonal inferior derecha
         ]
 
-        # Testear las cuatro direcciones diagonales
-        self.assertEqual(Bishop("blanco").basic_bishop_moves(3, 3), sum(expected_moves, []))
+        # Convirtiendo las listas a sets para evitar problemas con el orden
+        self.assertEqual(set(bishop.basic_bishop_moves(start_row, start_col)), set(expected_moves))
+
 
 class TestKnight(unittest.TestCase):
     def test_basic_knight_moves(self):

@@ -1,3 +1,6 @@
+## [0.08] - 08-23-24
+Added code pawn and changes in code
+
 ## [0.07] - 08-23-24
 Added code in cli.py
 

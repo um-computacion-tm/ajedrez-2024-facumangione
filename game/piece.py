@@ -63,9 +63,30 @@ class Queen(Piece):
         return rook_moves + bishop_moves
 
 ### PEONES ###
-class Pawn(Piece):
+class Pawn:
     def __init__(self, color):
-        super().__init__(color)
+        self.color = color
+    
+    def basic_pawn_moves(self, row, col):
+        moves = []
+        if self.color == "WHITE":
+            if row == 6:
+                moves.append((row - 2, col))  # Avance doble desde la posición inicial
+            moves.append((row - 1, col))  # Avance simple
+        elif self.color == "BLACK":
+            if row == 1:
+                moves.append((row + 2, col))  # Avance doble desde la posición inicial
+            moves.append((row + 1, col))  # Avance simple
+        return moves
+    
+    def eat_pieces_with_peon(self, row, col):
+        moves = []
+        if self.color == "WHITE":
+            moves = [(row - 1, col - 1), (row - 1, col + 1)]
+        elif self.color == "BLACK":
+            moves = [(row + 1, col - 1), (row + 1, col + 1)]
+        return moves
+
         
 ###REYES###
 class King(Piece):

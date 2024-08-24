@@ -35,3 +35,6 @@ class Board:
 
     def get_piece(self, row, col):
         return self.__positions__[row][col]
+
+def reset_board(self):
+    self.__init__()  # Reinicia el tablero llamando al constructor
