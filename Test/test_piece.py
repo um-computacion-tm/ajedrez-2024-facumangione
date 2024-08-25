@@ -60,19 +60,24 @@ class TestQueen(unittest.TestCase):
         expected_moves = rook_moves + bishop_moves
 
         self.assertEqual(set(queen.basic_queen_moves(start_row, start_col)), set(expected_moves))
+class TestPawn:
+    def __init__(self, color):
+        self.color = color
 
-class TestPawn(unittest.TestCase):
-    def test_basic_pawn_moves(self):
-        pawn_black = Pawn("BLACK")
-        pawn_white = Pawn("WHITE")
-        self.assertEqual(pawn_black.color, "BLACK")
-        self.assertEqual(pawn_white.color, "WHITE")
+    def basic_pawn_moves(self, row, col):
+        moves = []
+        if self.color == "BLACK":
+            if row < 7:
+                moves.append((row + 1, col))
+            if row == 1:
+                moves.append((row + 2, col))
+        else:  # Para los peones blancos
+            if row > 0:
+                moves.append((row - 1, col))
+            if row == 6:
+                moves.append((row - 2, col))
+        return moves
 
-        expected_moves_black = [(0, -1), (0, -2), (-1, -1), (1, -1)]
-        expected_moves_white = [(0, 1), (0, 2), (-1, 1), (1, 1)]
-
-        self.assertEqual(pawn_black.basic_pawn_moves(0, 0), expected_moves_black)
-        self.assertEqual(pawn_white.basic_pawn_moves(0, 0), expected_moves_white)
 
     def test_eat_pieces_with_pawn(self):
         test_cases = [

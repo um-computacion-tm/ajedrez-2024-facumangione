@@ -66,18 +66,21 @@ class Queen(Piece):
 class Pawn:
     def __init__(self, color):
         self.color = color
-    
+
     def basic_pawn_moves(self, row, col):
         moves = []
-        if self.color == "WHITE":
-            if row == 6:
-                moves.append((row - 2, col))  # Avance doble desde la posición inicial
-            moves.append((row - 1, col))  # Avance simple
-        elif self.color == "BLACK":
+        if self.color == "BLACK":
+            if row < 7:
+                moves.append((row + 1, col))
             if row == 1:
-                moves.append((row + 2, col))  # Avance doble desde la posición inicial
-            moves.append((row + 1, col))  # Avance simple
+                moves.append((row + 2, col))
+        else:  # Para los peones blancos
+            if row > 0:
+                moves.append((row - 1, col))
+            if row == 6:
+                moves.append((row - 2, col))
         return moves
+
     
     def eat_pieces_with_peon(self, row, col):
         moves = []
