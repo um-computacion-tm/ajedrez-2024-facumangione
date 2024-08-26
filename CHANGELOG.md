@@ -1,3 +1,6 @@
+## [1.00] - 08-26-24
+Added test in test_chess
+
 ## [0.09] - 08-25-24
 Change in pawn and test pawn
 

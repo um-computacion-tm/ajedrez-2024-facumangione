@@ -28,5 +28,24 @@ class TestChess(unittest.TestCase):
         chess_game.move(4, 4, 5, 5)  # Movimiento sin pieza en la posición de origen
         self.assertEqual(chess_game.turn, "WHITE")  # El turno no debería cambiar
         
+    def test_piece_capture(self):
+        chess_game = Chess()
+        chess_game.move(6, 4, 4, 4)  # Mover peón blanco
+        chess_game.move(1, 3, 3, 3)  # Mover peón negro
+        chess_game.move(4, 4, 3, 3)  # Captura el peón negro
+
+        self.assertIsNone(chess_game.board.get_piece(4, 4))  # Verificar que la posición original está vacía
+        self.assertIsNotNone(chess_game.board.get_piece(3, 3))  # Verificar que el peón blanco ocupa la posición del peón negro
+        self.assertEqual(chess_game.board.get_piece(3, 3).color, "WHITE")  # Verificar que la pieza capturada es blanca
+        
+    def test_invalid_piece_movement(self):
+        chess_game = Chess()
+        chess_game.move(0, 0, 3, 0)  # Intentar mover una torre desde (0, 0) a (3, 0), lo cual es inválido al inicio
+        self.assertIsNotNone(chess_game.board.get_piece(0, 0))  # Verificar que la torre sigue en su lugar original
+        self.assertIsNone(chess_game.board.get_piece(3, 0))  # Verificar que la posición destino está vacía
+        self.assertEqual(chess_game.turn, "WHITE")  # Verificar que el turno no cambió
+    
+
+        
 if __name__ == "__main__":
     unittest.main()
