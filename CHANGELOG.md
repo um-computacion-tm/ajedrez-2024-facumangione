@@ -1,3 +1,6 @@
+## [1.10] - 08-27-24
+Added test and code in chess.py
+
 ## [1.00] - 08-26-24
 Added test in test_chess
 

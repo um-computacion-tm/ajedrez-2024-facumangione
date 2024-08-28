@@ -33,7 +33,7 @@ class TestChess(unittest.TestCase):
         chess_game.move(6, 4, 4, 4)  # Mover peón blanco
         chess_game.move(1, 3, 3, 3)  # Mover peón negro
         chess_game.move(4, 4, 3, 3)  # Captura el peón negro
-
+        
         self.assertIsNone(chess_game.board.get_piece(4, 4))  # Verificar que la posición original está vacía
         self.assertIsNotNone(chess_game.board.get_piece(3, 3))  # Verificar que el peón blanco ocupa la posición del peón negro
         self.assertEqual(chess_game.board.get_piece(3, 3).color, "WHITE")  # Verificar que la pieza capturada es blanca
@@ -45,6 +45,14 @@ class TestChess(unittest.TestCase):
         self.assertIsNone(chess_game.board.get_piece(3, 0))  # Verificar que la posición destino está vacía
         self.assertEqual(chess_game.turn, "WHITE")  # Verificar que el turno no cambió
     
+    def test_stalemate_detection(self):
+        chess_game = Chess()
+        # Crear una situación de tablas
+        # Los movimientos aquí deben configurarse para reflejar una situación real de empate
+
+        self.assertTrue(chess_game.is_stalemate("BLACK"))  # Verificar que el juego está en tablas para el rey negro
+        self.assertIsNone(chess_game.winner)  # Verificar que no hay ganador
+
 
         
 if __name__ == "__main__":

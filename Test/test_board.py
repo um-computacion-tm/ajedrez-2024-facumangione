@@ -1,5 +1,5 @@
 import unittest
-from game.piece import Rook, Knight, Bishop, Queen, King, Pawn
+from game.pieces.piece import Rook, Knight, Bishop, Queen, King, Pawn
 from game.board import Board
 
 class TestBoard(unittest.TestCase):
