@@ -1,4 +1,7 @@
-## [1.10] - 08-27-24
+## [1.02] - 08-28-24
+Added and change code in board,chess and test
+
+## [1.01] - 08-27-24
 Added test and code in chess.py
 
 ## [1.00] - 08-26-24

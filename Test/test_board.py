@@ -71,5 +71,21 @@ class TestBoard(unittest.TestCase):
             for col in range(8):
                 self.assertIsNone(self.board.get_piece(row, col))
 
+    def test_str_board(self):
+        board = Board(for_test=True)
+        self.assertEqual(
+            str(board),
+            (
+                "♖      ♖\n"
+                "        \n"
+                "        \n"
+                "        \n"
+                "        \n"
+                "        \n"
+                "        \n"
+                "♜      ♜\n"
+            )
+        )
+
 if __name__ == '__main__':
     unittest.main()
