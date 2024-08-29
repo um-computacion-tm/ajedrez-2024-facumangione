@@ -1,3 +1,6 @@
+## [1.03] - 08-29-24
+Added code in cli and added test_cli
+
 ## [1.02] - 08-28-24
 Added and change code in board,chess and test
 
