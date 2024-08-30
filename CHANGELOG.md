@@ -1,3 +1,6 @@
+## [1.03] - 08-30-24
+Added exceptions and change in chess
+
 ## [1.03] - 08-29-24
 Added code in cli and added test_cli
 

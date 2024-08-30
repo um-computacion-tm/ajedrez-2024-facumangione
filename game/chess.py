@@ -1,4 +1,6 @@
 from game.board import Board
+from game.exceptions import InvalidMove, InvalidMoveNoPiece, InvalidMoveRookMove
+from game.pieces.piece import Rook, Knight, Bishop, Queen, King, Pawn
 
 class Chess:
     def __init__(self):
@@ -7,26 +9,28 @@ class Chess:
         self.winner = None
 
     def is_playing(self):
-        return True
+        return self.winner is None
 
     def move(self, from_row, from_col, to_row, to_col):
         # Obtener la pieza de la posición inicial
         piece = self.__board__.get_piece(from_row, from_col)
         
         # Validar que la pieza existe y que es del color correcto
-        if piece is None or piece.color != self.__turn__:
-            print("No valid piece to move")
-            return False
+        if piece is None:
+            raise InvalidMoveNoPiece(f"No piece at position ({from_row}, {from_col})")
+        if piece.color != self.__turn__:
+            raise InvalidMove(f"It is {self.__turn__}'s turn, not {piece.color}'s turn")
 
         # Validar que el movimiento es legal
         if not self.is_valid_move(from_row, from_col, to_row, to_col):
-            print("Invalid move")
-            return False
+            if isinstance(piece, Rook):
+                raise InvalidMoveRookMove(f"Rook cannot move from ({from_row}, {from_col}) to ({to_row}, {to_col})")
+            else:
+                raise InvalidMove(f"Invalid move for {piece.__class__.__name__} from ({from_row}, {from_col}) to ({to_row}, {to_col})")
 
         # Mover la pieza y cambiar el turno
         self.__board__.move_piece(from_row, from_col, to_row, to_col)
         self.change_turn()
-        return True
 
     def is_valid_move(self, from_row, from_col, to_row, to_col):
         piece = self.__board__.get_piece(from_row, from_col)
@@ -50,21 +54,17 @@ class Chess:
                 piece = self.__board__.get_piece(row, col)
                 if piece and piece.color == color:
                     for move in piece.get_valid_moves(self.__board__, row, col):
-                        # Simular el movimiento
                         original_piece = self.__board__.get_piece(*move)
                         self.__board__.move_piece(row, col, move[0], move[1])
                         if not self.is_in_check(color):
-                            # Deshacer el movimiento
                             self.__board__.move_piece(move[0], move[1], row, col)
                             self.__board__.place_piece(move[0], move[1], original_piece)
                             return False
-                        # Deshacer el movimiento
                         self.__board__.move_piece(move[0], move[1], row, col)
                         self.__board__.place_piece(move[0], move[1], original_piece)
         return True
 
     def is_in_check(self, color):
-        # Implementar lógica para verificar si el rey del color dado está en jaque
         return False  # Simplificación
 
     def check_for_stalemate(self):

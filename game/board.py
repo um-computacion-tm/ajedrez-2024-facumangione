@@ -2,16 +2,8 @@ from game.pieces.piece import Rook, Knight, Bishop, Queen, King, Pawn
 
 class Board:
     def __init__(self, for_test=False):
-        self.__positions__ = []
-
-        # Inicializar el tablero con None
-        for _ in range(8):
-            col = []
-            for _ in range(8):
-                col.append(None)
-            self.__positions__.append(col)
-
-        # Colocar las piezas si no es para test
+        self.__positions__ = [[None for _ in range(8)] for _ in range(8)]
+        
         if not for_test:
             # Colocar las piezas negras
             self.__positions__[0][0] = Rook("BLACK", self)
