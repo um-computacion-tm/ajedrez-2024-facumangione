@@ -1,3 +1,4 @@
+from board import Board
 from piece import Piece
 
 class Rook(Piece):
@@ -9,6 +10,11 @@ class Rook(Piece):
         moves = [(r, col) for r in range(8) if r != row] + \
                 [(row, c) for c in range(8) if c != col]
         return moves
-    
-    withe_str = "♖"
-    black_str="♜"
+
+    @property
+    def white_str(self):
+        return "♖"
+
+    @property
+    def black_str(self):
+        return "♜"

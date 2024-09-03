@@ -1,3 +1,6 @@
+## [1.04] - 09-2-24
+Change in piece, rook and test rook
+
 ## [1.03] - 08-30-24
 Added exceptions and change in chess
 
