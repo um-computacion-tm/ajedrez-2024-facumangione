@@ -17,3 +17,12 @@ class InvalidMoveRookMove(InvalidMove):
         self.to_row = to_row
         self.to_col = to_col
         super().__init__(f"Invalid move for Rook from ({from_row}, {from_col}) to ({to_row}, {to_col})")
+
+class InvalidMove(Exception):
+    def __init__(self, message="Movimiento inválido"):
+        self.message = message
+        super().__init__(self.message)
+
+class OutOfBoard(InvalidMove):
+    def __init__(self):
+        super().__init__("La posición indicada se encuentra fuera del tablero")
