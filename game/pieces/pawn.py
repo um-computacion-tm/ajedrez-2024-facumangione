@@ -1,8 +1,8 @@
 from piece import Piece
 
-class Pawn:
+class Pawn(Piece):
     def __init__(self, color):
-        self.color = color
+        super().__init__(color)
 
     def basic_pawn_moves(self, row, col):
         moves = []
@@ -17,7 +17,6 @@ class Pawn:
             if row == 6:
                 moves.append((row - 2, col))
         return moves
-
     
     def eat_pieces_with_peon(self, row, col):
         moves = []
@@ -27,5 +26,10 @@ class Pawn:
             moves = [(row + 1, col - 1), (row + 1, col + 1)]
         return moves
 
-    withe_str = "♙"
-    black_str="♟"
+    @property
+    def white_str(self):
+        return "♙"
+
+    @property
+    def black_str(self):
+        return "♟"

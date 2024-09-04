@@ -1,4 +1,7 @@
 ## [1.04] - 09-2-24
+Change in pieces, king, pawn and queen. Changes in test
+
+## [1.04] - 09-2-24
 Change in chess, added test and exceptions
 
 ## [1.04] - 09-2-24

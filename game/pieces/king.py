@@ -20,5 +20,10 @@ class King(Piece):
 
         return moves
     
-    withe_str = "♔"
-    black_str="♚"
+    @property
+    def white_str(self):
+        return "♔"
+
+    @property
+    def black_str(self):
+        return "♚"

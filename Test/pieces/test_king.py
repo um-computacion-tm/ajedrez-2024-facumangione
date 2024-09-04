@@ -2,17 +2,20 @@ import unittest
 from game.pieces import King
 
 class TestKing(unittest.TestCase):
+
+    def test_str(self):
+        king = King("WHITE")
+        self.assertEqual(str(king), "♔")
+
     def test_basic_king_moves(self):
-        king = King("black")
-        self.assertEqual(king.color, "black")
+        king = King("WHITE")
+        expected_moves = [(0, 1), (1, 1), (1, 0)]
+        self.assertEqual(king.basic_king_moves(0, 0), expected_moves)
 
-        start_row, start_col = 4, 4
+    def test_king_moves_out_of_bounds(self):
+        king = King("WHITE")
+        expected_moves = [(0, 1), (1, 1), (1, 0)]
+        self.assertEqual(king.basic_king_moves(0, 0), expected_moves)
 
-        # Movimientos esperados del rey (una casilla en cualquier dirección)
-        expected_moves = [
-            (3, 3), (3, 4), (3, 5),  # Superior
-            (4, 3),         (4, 5),  # Lados
-            (5, 3), (5, 4), (5, 5)   # Inferior
-        ]
-
-        self.assertEqual(set(king.basic_king_moves(start_row, start_col)), set(expected_moves))
+if __name__ == '__main__':
+    unittest.main()

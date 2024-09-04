@@ -9,6 +9,11 @@ class Queen(Piece):
         rook_moves = Rook(self.color).basic_rook_moves(row, col)
         bishop_moves = Bishop(self.color).basic_bishop_moves(row, col)
         return rook_moves + bishop_moves
-    
-    withe_str = "♕"
-    black_str="♛"
+
+    @property
+    def white_str(self):
+        return "♕"
+
+    @property
+    def black_str(self):
+        return "♛"
