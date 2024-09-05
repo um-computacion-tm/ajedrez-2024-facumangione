@@ -1,13 +1,16 @@
-## [1.04] - 09-2-24
+## [1.08] - 09-2-24
+Changes in pieces bishop and knight, added code in his test
+
+## [1.07] - 09-2-24
 Change in pieces, king, pawn and queen. Changes in test
 
-## [1.04] - 09-2-24
+## [1.06] - 09-2-24
 Change in chess, added test and exceptions
 
-## [1.04] - 09-2-24
+## [1.05] - 09-2-24
 Change in piece, rook and test rook
 
-## [1.03] - 08-30-24
+## [1.04] - 08-30-24
 Added exceptions and change in chess
 
 ## [1.03] - 08-29-24
