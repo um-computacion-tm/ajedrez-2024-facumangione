@@ -1,5 +1,4 @@
-from board import Board
-from piece import Piece
+from .piece import Piece  # En el archivo rook.py
 
 class Rook(Piece):
     def __init__(self, color):

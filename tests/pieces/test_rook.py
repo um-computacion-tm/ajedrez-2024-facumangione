@@ -1,5 +1,5 @@
 import unittest
-from game.pieces import Rook
+from game.pieces.rook import Rook
 from game.board import Board    
 
 

@@ -1,10 +1,13 @@
-## [1.08] - 09-2-24
+## [1.09] - 09-6-24
+Changes in pieces, and changes in chess.py
+
+## [1.08] - 09-5-24
 Changes in pieces bishop and knight, added code in his test
 
-## [1.07] - 09-2-24
+## [1.07] - 09-4-24
 Change in pieces, king, pawn and queen. Changes in test
 
-## [1.06] - 09-2-24
+## [1.06] - 09-3-24
 Change in chess, added test and exceptions
 
 ## [1.05] - 09-2-24

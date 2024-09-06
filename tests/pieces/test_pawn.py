@@ -1,5 +1,5 @@
 import unittest
-from game.pieces import Pawn
+from game.pieces.pawn import Pawn
 
 class TestPawn(unittest.TestCase):
 

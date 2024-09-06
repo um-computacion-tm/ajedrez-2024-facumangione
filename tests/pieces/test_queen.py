@@ -1,5 +1,5 @@
 import unittest
-from game.pieces import Queen, Rook, Bishop
+from game.pieces.queen import Queen, Rook, Bishop
 
 class TestQueen(unittest.TestCase):
 

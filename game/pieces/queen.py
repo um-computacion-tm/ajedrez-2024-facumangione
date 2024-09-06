@@ -1,4 +1,7 @@
-from piece import Piece, Rook, Bishop
+from game.pieces.piece import Piece
+from game.pieces.rook import Rook
+from game.pieces.bishop import Bishop
+
 
 class Queen(Piece):
     def __init__(self, color):

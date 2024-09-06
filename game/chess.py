@@ -1,6 +1,11 @@
 from game.board import Board
 from game.exceptions import InvalidMove, InvalidMoveNoPiece, InvalidMoveRookMove, OutOfBoard
-from game.pieces.piece import Rook, Knight, Bishop, Queen, King, Pawn
+from game.pieces.rook import Rook
+from game.pieces.knight import Knight
+from game.pieces.bishop import Bishop
+from game.pieces.queen import Queen
+from game.pieces.king import King
+from game.pieces.pawn import Pawn
 
 class Chess:
     def __init__(self):
@@ -18,7 +23,7 @@ class Chess:
 
         # Obtener la pieza de la posición inicial
         piece = self.__board__.get_piece(from_row, from_col)
-        
+
         # Validar que la pieza existe y que es del color correcto
         if piece is None:
             raise InvalidMoveNoPiece(f"No piece at position ({from_row}, {from_col})")
@@ -29,6 +34,8 @@ class Chess:
         if not self.is_valid_move(from_row, from_col, to_row, to_col):
             if isinstance(piece, Rook):
                 raise InvalidMoveRookMove(f"Rook cannot move from ({from_row}, {from_col}) to ({to_row}, {to_col})")
+            elif isinstance(piece, Knight):
+                raise InvalidMove(f"Knight cannot move from ({from_row}, {from_col}) to ({to_row}, {to_col})")
             else:
                 raise InvalidMove(f"Invalid move for {piece.__class__.__name__} from ({from_row}, {from_col}) to ({to_row}, {to_col})")
 
