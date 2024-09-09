@@ -36,6 +36,10 @@ class Chess:
                 raise InvalidMoveRookMove(f"Rook cannot move from ({from_row}, {from_col}) to ({to_row}, {to_col})")
             elif isinstance(piece, Knight):
                 raise InvalidMove(f"Knight cannot move from ({from_row}, {from_col}) to ({to_row}, {to_col})")
+            elif isinstance(piece, Bishop):
+                raise InvalidMove(f"Bishop cannot move from ({from_row}, {from_col}) to ({to_row}, {to_col})")
+            elif isinstance(piece, Pawn):
+                raise InvalidMove(f"Pawn cannot move from ({from_row}, {from_col}) to ({to_row}, {to_col})")
             else:
                 raise InvalidMove(f"Invalid move for {piece.__class__.__name__} from ({from_row}, {from_col}) to ({to_row}, {to_col})")
 

@@ -1,4 +1,7 @@
 ## [1.09] - 09-6-24
+More change in chess.py and test
+
+## [1.09] - 09-6-24
 Changes in pieces, and changes in chess.py
 
 ## [1.08] - 09-5-24
