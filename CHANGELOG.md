@@ -1,5 +1,8 @@
-## [1.09] - 09-6-24
-More change in chess.py and test
+## [2.01] - 09-10-24
+More change in chess.py (added queen,king)and test 
+
+## [2.00] - 09-09-24
+More change in chess.py (added knight,bishop)and test
 
 ## [1.09] - 09-6-24
 Changes in pieces, and changes in chess.py

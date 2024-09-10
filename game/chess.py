@@ -1,5 +1,5 @@
 from game.board import Board
-from game.exceptions import InvalidMove, InvalidMoveNoPiece, InvalidMoveRookMove, OutOfBoard
+from game.exceptions import InvalidMove, InvalidMoveNoPiece, InvalidMoveRookMove, InvalidMoveBishopMove, InvalidMoveKnightMove, InvalidMoveQueenMove, InvalidMoveKingMove, OutOfBoard
 from game.pieces.rook import Rook
 from game.pieces.knight import Knight
 from game.pieces.bishop import Bishop
@@ -23,7 +23,7 @@ class Chess:
 
         # Obtener la pieza de la posición inicial
         piece = self.__board__.get_piece(from_row, from_col)
-
+        
         # Validar que la pieza existe y que es del color correcto
         if piece is None:
             raise InvalidMoveNoPiece(f"No piece at position ({from_row}, {from_col})")
@@ -35,11 +35,13 @@ class Chess:
             if isinstance(piece, Rook):
                 raise InvalidMoveRookMove(f"Rook cannot move from ({from_row}, {from_col}) to ({to_row}, {to_col})")
             elif isinstance(piece, Knight):
-                raise InvalidMove(f"Knight cannot move from ({from_row}, {from_col}) to ({to_row}, {to_col})")
+                raise InvalidMoveKnightMove(f"Knight cannot move from ({from_row}, {from_col}) to ({to_row}, {to_col})")
             elif isinstance(piece, Bishop):
-                raise InvalidMove(f"Bishop cannot move from ({from_row}, {from_col}) to ({to_row}, {to_col})")
-            elif isinstance(piece, Pawn):
-                raise InvalidMove(f"Pawn cannot move from ({from_row}, {from_col}) to ({to_row}, {to_col})")
+                raise InvalidMoveBishopMove(f"Bishop cannot move from ({from_row}, {from_col}) to ({to_row}, {to_col})")
+            elif isinstance(piece, Queen):
+                raise InvalidMoveQueenMove(f"Queen cannot move from ({from_row}, {from_col}) to ({to_row}, {to_col})")
+            elif isinstance(piece, King):
+                raise InvalidMoveKingMove(f"King cannot move from ({from_row}, {from_col}) to ({to_row}, {to_col})")
             else:
                 raise InvalidMove(f"Invalid move for {piece.__class__.__name__} from ({from_row}, {from_col}) to ({to_row}, {to_col})")
 
