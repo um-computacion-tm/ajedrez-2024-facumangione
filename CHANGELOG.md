@@ -1,3 +1,9 @@
+## [2.03] - 09-12-24
+Added player.py
+
+## [2.02] - 09-11-24
+Change in expetions
+
 ## [2.01] - 09-10-24
 More change in chess.py (added queen,king)and test 
 
