@@ -26,3 +26,23 @@ class InvalidMove(Exception):
 class OutOfBoard(InvalidMove):
     def __init__(self):
         super().__init__("La posición indicada se encuentra fuera del tablero")
+
+class InvalidMoveBishopMove(InvalidMove):
+    """Raised when a Bishop makes an invalid move."""
+    pass
+
+class InvalidMoveKnightMove(InvalidMove):
+    """Raised when a Knight makes an invalid move."""
+    pass
+
+class InvalidMoveQueenMove(InvalidMove):
+    """Raised when a Queen makes an invalid move."""
+    pass
+
+class InvalidMoveKingMove(InvalidMove):
+    """Raised when a King makes an invalid move."""
+    pass
+
+class InvalidMovePawnMove(InvalidMove):
+    """Raised when a pawn makes an invalid move."""
+    pass

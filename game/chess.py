@@ -1,5 +1,15 @@
 from game.board import Board
-from game.exceptions import InvalidMove, InvalidMoveNoPiece, InvalidMoveRookMove, InvalidMoveBishopMove, InvalidMoveKnightMove, InvalidMoveQueenMove, InvalidMoveKingMove, OutOfBoard
+from game.exceptions import (
+    InvalidMove,
+    InvalidMoveNoPiece,
+    InvalidMoveRookMove,
+    InvalidMoveKnightMove,
+    InvalidMoveBishopMove,
+    InvalidMoveQueenMove,
+    InvalidMoveKingMove,
+    InvalidMovePawnMove,  # Excepción para peón
+    OutOfBoard
+)
 from game.pieces.rook import Rook
 from game.pieces.knight import Knight
 from game.pieces.bishop import Bishop
@@ -42,6 +52,8 @@ class Chess:
                 raise InvalidMoveQueenMove(f"Queen cannot move from ({from_row}, {from_col}) to ({to_row}, {to_col})")
             elif isinstance(piece, King):
                 raise InvalidMoveKingMove(f"King cannot move from ({from_row}, {from_col}) to ({to_row}, {to_col})")
+            elif isinstance(piece, Pawn):
+                raise InvalidMovePawnMove(f"Pawn cannot move from ({from_row}, {from_col}) to ({to_row}, {to_col})")
             else:
                 raise InvalidMove(f"Invalid move for {piece.__class__.__name__} from ({from_row}, {from_col}) to ({to_row}, {to_col})")
 
