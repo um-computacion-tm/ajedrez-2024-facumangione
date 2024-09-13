@@ -1,3 +1,6 @@
+## [2.04] - 09-13-24
+Added test_player.py
+
 ## [2.03] - 09-12-24
 Added player.py
 
