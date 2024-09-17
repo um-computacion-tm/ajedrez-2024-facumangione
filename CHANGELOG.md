@@ -1,3 +1,6 @@
+## [2.05] - 09-16-24
+Change in player and test
+
 ## [2.04] - 09-13-24
 Added test_player.py
 
