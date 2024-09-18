@@ -1,48 +1,51 @@
 class InvalidMove(Exception):
-    """Clase base para excepciones de movimientos inválidos en ajedrez."""
-    pass
-
-class InvalidMoveNoPiece(InvalidMove):
-    """Excepción para movimientos cuando no hay una pieza en la posición de origen."""
-    def __init__(self, from_row, from_col):
-        self.from_row = from_row
-        self.from_col = from_col
-        super().__init__(f"No piece found at position ({from_row}, {from_col})")
-
-class InvalidMoveRookMove(InvalidMove):
-    """Excepción para movimientos inválidos específicos de la torre."""
-    def __init__(self, from_row, from_col, to_row, to_col):
-        self.from_row = from_row
-        self.from_col = from_col
-        self.to_row = to_row
-        self.to_col = to_col
-        super().__init__(f"Invalid move for Rook from ({from_row}, {from_col}) to ({to_row}, {to_col})")
-
-class InvalidMove(Exception):
-    def __init__(self, message="Movimiento inválido"):
+    def __init__(self, message="Movimiento de pieza inválido", position=None):
         self.message = message
+        self.position = position  # Posición involucrada en el error
         super().__init__(self.message)
 
+    def __str__(self):
+        if self.position:
+            return f"{self.message} en la posición {self.position}"
+        return self.message
+
+
+class InvalidTurn(InvalidMove):
+    def __init__(self, position=None):
+        super().__init__(message="No puedes mover la pieza del oponente", position=position)
+
+
+class EmptyPosition(InvalidMove):
+    def __init__(self, position=None):
+        super().__init__(message="La posición seleccionada está vacía", position=position)
+
+
 class OutOfBoard(InvalidMove):
-    def __init__(self):
-        super().__init__("La posición indicada se encuentra fuera del tablero")
+    def __init__(self, position=None):
+        super().__init__(message="La posición indicada está fuera del tablero", position=position)
 
-class InvalidMoveBishopMove(InvalidMove):
-    """Raised when a Bishop makes an invalid move."""
-    pass
 
-class InvalidMoveKnightMove(InvalidMove):
-    """Raised when a Knight makes an invalid move."""
-    pass
+# Excepciones específicas de piezas
+class InvalidRookMove(InvalidMove):
+    def __init__(self, position=None):
+        super().__init__(message="Movimiento inválido de la Torre", position=position)
 
-class InvalidMoveQueenMove(InvalidMove):
-    """Raised when a Queen makes an invalid move."""
-    pass
 
-class InvalidMoveKingMove(InvalidMove):
-    """Raised when a King makes an invalid move."""
-    pass
+class InvalidKnightMove(InvalidMove):
+    def __init__(self, position=None):
+        super().__init__(message="Movimiento inválido del Caballo", position=position)
 
-class InvalidMovePawnMove(InvalidMove):
-    """Raised when a pawn makes an invalid move."""
-    pass
+
+class InvalidBishopMove(InvalidMove):
+    def __init__(self, position=None):
+        super().__init__(message="Movimiento inválido del Alfil", position=position)
+
+
+class InvalidQueenMove(InvalidMove):
+    def __init__(self, position=None):
+        super().__init__(message="Movimiento inválido de la Reina", position=position)
+
+
+class InvalidKingMove(InvalidMove):
+    def __init__(self, position=None):
+        super().__init__(message="Movimiento inválido del Rey", position=position)
