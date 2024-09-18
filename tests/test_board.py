@@ -6,6 +6,7 @@ from game.pieces.queen import Queen
 from game.pieces.king import King
 from game.pieces.pawn import Pawn
 from game.board import Board
+from game.exceptions import InvalidMove, InvalidTurn, EmptyPosition, OutOfBoard
 
 class TestBoard(unittest.TestCase):
     def setUp(self):
@@ -91,6 +92,35 @@ class TestBoard(unittest.TestCase):
                 "♜      ♜\n"
             )
         )
+
+    def test_move_piece(self):
+        # Mover una torre blanca de (7, 0) a (5, 0)
+        self.board.move_piece(7, 0, 5, 0)
+        self.assertIsInstance(self.board.get_piece(5, 0), Rook)
+        self.assertIsNone(self.board.get_piece(7, 0))
+
+    def test_invalid_move_empty_position(self):
+        # Intentar mover una pieza desde una posición vacía
+        with self.assertRaises(EmptyPosition):
+            self.board.move_piece(4, 4, 5, 5)
+
+    def test_invalid_move_out_of_board(self):
+        # Intentar mover una pieza fuera del tablero
+        with self.assertRaises(OutOfBoard):
+            self.board.get_piece(8, 8)
+
+    def test_invalid_move_general(self):
+        # Intentar mover una pieza a una posición inválida para su tipo (como mover una torre en diagonal)
+        rook = self.board.get_piece(7, 0)
+        with self.assertRaises(InvalidMove):
+            rook.move(7, 0, 6, 1)  # Movimiento en diagonal inválido para la torre
+
+    def test_place_piece(self):
+        # Colocar una nueva pieza en una posición
+        new_rook = Rook("WHITE", self.board)
+        self.board.place_piece(4, 4, new_rook)
+        self.assertIsInstance(self.board.get_piece(4, 4), Rook)
+        self.assertEqual(self.board.get_piece(4, 4).color, "WHITE")
 
 if __name__ == '__main__':
     unittest.main()

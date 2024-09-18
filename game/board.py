@@ -4,9 +4,11 @@ from game.pieces.bishop import Bishop
 from game.pieces.queen import Queen
 from game.pieces.king import King
 from game.pieces.pawn import Pawn
+from exceptions import OutOfBoard, InvalidMove, InvalidTurn, EmptyPosition
 
 class Board:
     def __init__(self, for_test=False):
+        # Inicializa el tablero como una matriz de 8x8, con None en cada celda
         self.__positions__ = [[None for _ in range(8)] for _ in range(8)]
         
         if not for_test:
@@ -35,6 +37,7 @@ class Board:
                 self.__positions__[6][i] = Pawn("WHITE", self)
 
     def __str__(self):
+        # Retorna una representación en cadena del tablero
         board_str = ""
         for row in self.__positions__:
             for cell in row:
@@ -46,16 +49,25 @@ class Board:
         return board_str
 
     def get_piece(self, row, col):
+        # Devuelve la pieza en la posición especificada, lanza una excepción si está fuera del tablero
+        if not (0 <= row < 8 and 0 <= col < 8):
+            raise OutOfBoard(f"Posición fuera del tablero: {row}, {col}")
         return self.__positions__[row][col]
 
     def set_piece(self, row, col, piece):
+        # Establece una pieza en una posición específica del tablero
         self.__positions__[row][col] = piece
 
     def move_piece(self, from_row, from_col, to_row, to_col):
+        # Mueve una pieza de una posición a otra
         piece = self.get_piece(from_row, from_col)
-        if piece:
-            self.set_piece(to_row, to_col, piece)
-            self.set_piece(from_row, from_col, None)
+        if piece is None:
+            raise EmptyPosition(f"No hay pieza en la posición: {from_row}, {from_col}")
+        if not piece.is_valid_move(to_row, to_col):
+            raise InvalidMove(f"Movimiento inválido para {piece}")
+        self.set_piece(to_row, to_col, piece)
+        self.set_piece(from_row, from_col, None)
 
     def place_piece(self, row, col, piece):
+        # Coloca una pieza en una posición específica
         self.__positions__[row][col] = piece

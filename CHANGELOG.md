@@ -1,4 +1,7 @@
 ## [2.05] - 09-16-24
+Change in board and test_board
+
+## [2.05] - 09-16-24
 Change in cli and exceptions
 
 ## [2.05] - 09-16-24
