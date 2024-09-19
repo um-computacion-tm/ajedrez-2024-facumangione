@@ -1,14 +1,16 @@
 from game.board import Board
 from game.exceptions import (
     InvalidMove,
+    InvalidTurn,
     InvalidMoveNoPiece,
     InvalidMoveRookMove,
     InvalidMoveKnightMove,
     InvalidMoveBishopMove,
     InvalidMoveQueenMove,
     InvalidMoveKingMove,
-    InvalidMovePawnMove,  # Excepción para peón
-    OutOfBoard
+    InvalidMovePawnMove,
+    OutOfBoard,
+    EmptyPosition
 )
 from game.pieces.rook import Rook
 from game.pieces.knight import Knight
@@ -33,15 +35,16 @@ class Chess:
 
         # Obtener la pieza de la posición inicial
         piece = self.__board__.get_piece(from_row, from_col)
-        
-        # Validar que la pieza existe y que es del color correcto
-        if piece is None:
-            raise InvalidMoveNoPiece(f"No piece at position ({from_row}, {from_col})")
-        if piece.color != self.__turn__:
-            raise InvalidMove(f"It is {self.__turn__}'s turn, not {piece.color}'s turn")
 
-        # Validar que el movimiento es legal
-        if not self.is_valid_move(from_row, from_col, to_row, to_col):
+        if not piece:
+            raise EmptyPosition()
+
+        # Verificar que la pieza es del color que le corresponde al turno
+        if piece.color != self.__turn__:
+            raise InvalidTurn(f"It is {self.__turn__}'s turn, not {piece.color}'s turn")
+
+        # Validar que el movimiento es legal para la pieza
+        if not piece.valid_positions(from_row, from_col, to_row, to_col):
             if isinstance(piece, Rook):
                 raise InvalidMoveRookMove(f"Rook cannot move from ({from_row}, {from_col}) to ({to_row}, {to_col})")
             elif isinstance(piece, Knight):
@@ -60,12 +63,6 @@ class Chess:
         # Mover la pieza y cambiar el turno
         self.__board__.move_piece(from_row, from_col, to_row, to_col)
         self.change_turn()
-
-    def is_valid_move(self, from_row, from_col, to_row, to_col):
-        piece = self.__board__.get_piece(from_row, from_col)
-        if piece:
-            return piece.valid_positions(from_row, from_col, to_row, to_col)
-        return False
 
     @property
     def turn(self):
@@ -94,7 +91,8 @@ class Chess:
         return True
 
     def is_in_check(self, color):
-        return False  # Simplificación
+        # Implementación de la lógica para verificar si el rey está en jaque
+        return False
 
     def check_for_stalemate(self):
         if self.is_stalemate(self.turn):

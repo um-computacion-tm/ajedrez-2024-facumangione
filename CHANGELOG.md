@@ -1,7 +1,10 @@
-## [2.05] - 09-16-24
+## [2.08] - 09-19-24
+Change in chess and test
+
+## [2.07] - 09-18-24
 Change in board and test_board
 
-## [2.05] - 09-16-24
+## [2.06] - 09-17-24
 Change in cli and exceptions
 
 ## [2.05] - 09-16-24
