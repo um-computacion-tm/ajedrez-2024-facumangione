@@ -1,3 +1,6 @@
+## [2.08] - 09-20-24
+Change in pices (queen,king and pawn)
+
 ## [2.08] - 09-19-24
 Change in chess and test
 
