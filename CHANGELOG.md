@@ -1,4 +1,7 @@
-## [2.08] - 09-20-24
+## [2.10] - 09-23-24
+Change in all pieces and test
+
+## [2.09] - 09-21-24
 Change in pices (queen,king and pawn)
 
 ## [2.08] - 09-19-24
