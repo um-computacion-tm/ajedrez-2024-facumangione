@@ -1,51 +1,34 @@
+# Exceptions
 class InvalidMove(Exception):
-    def __init__(self, message="Movimiento de pieza inválido", position=None):
-        self.message = message
-        self.position = position  # Posición involucrada en el error
-        super().__init__(self.message)
-
-    def __str__(self):
-        if self.position:
-            return f"{self.message} en la posición {self.position}"
+    message = "Invalid piece movement"
+    def _str_(self):
         return self.message
 
+class OutOfBoundsError(InvalidMove):
+    message = "Row and column values must be between 0 and 7."
 
-class InvalidTurn(InvalidMove):
-    def __init__(self, position=None):
-        super().__init__(message="No puedes mover la pieza del oponente", position=position)
+class NonNumericInputError(InvalidMove):
+    message = "You must enter numeric values between 0 and 7."
 
+class WrongTurnError(InvalidMove):
+    message = "It is not the turn of the selected piece."
 
-class EmptyPosition(InvalidMove):
-    def __init__(self, position=None):
-        super().__init__(message="La posición seleccionada está vacía", position=position)
+class InvalidPieceMoveError(InvalidMove):
+    message = "Invalid move for the selected piece."
 
+class NonPieceOriginError(InvalidMove):
+    message = "There is no piece at the origin position."
 
-class OutOfBoard(InvalidMove):
-    def __init__(self, position=None):
-        super().__init__(message="La posición indicada está fuera del tablero", position=position)
+class NonCaptureOwnPieceError(InvalidMove):
+    message = "You cannot capture your own pieces."
 
+class NonPassOverPieceError(InvalidMove):
+    message = "You cannot pass over other pieces."
 
-# Excepciones específicas de piezas
-class InvalidRookMove(InvalidMove):
-    def __init__(self, position=None):
-        super().__init__(message="Movimiento inválido de la Torre", position=position)
+class NonCaptureForwardError(InvalidMove):
+    message = "You cannot capture forward."
 
-
-class InvalidKnightMove(InvalidMove):
-    def __init__(self, position=None):
-        super().__init__(message="Movimiento inválido del Caballo", position=position)
-
-
-class InvalidBishopMove(InvalidMove):
-    def __init__(self, position=None):
-        super().__init__(message="Movimiento inválido del Alfil", position=position)
-
-
-class InvalidQueenMove(InvalidMove):
-    def __init__(self, position=None):
-        super().__init__(message="Movimiento inválido de la Reina", position=position)
-
-
-class InvalidKingMove(InvalidMove):
-    def __init__(self, position=None):
-        super().__init__(message="Movimiento inválido del Rey", position=position)
+class GameOverException(Exception):
+    def _init_(self, message):
+        self._message_ = message
+        super()._init_(message)
