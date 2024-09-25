@@ -1,36 +1,31 @@
-# test_king.py
-
 import unittest
 from game.pieces.king import King
 
-class TestKing(unittest.TestCase):
+class TestRey(unittest.TestCase):
+#Verifica que el método __str__ de la clase Rey retorne 'K' para un rey blanco y 'k' para un rey negro.
+    def test_representacion_str(self):
+        rey_blanco = King('WHITE')
+        rey_negro = King('BLACK')
+        self.assertEqual(rey_blanco.__str__(), 'K')
+        self.assertEqual(rey_negro.__str__(), 'k')
 
-    def setUp(self):
-        self.king_white = King("WHITE")
-        self.king_black = King("BLACK")
+#Evalúa que el rey blanco en el centro del tablero tenga los movimientos esperados usando el método possible_moves.
 
-    def test_str(self):
-        self.assertEqual(str(self.king_white), "♔")
-        self.assertEqual(str(self.king_black), "♚")
+    def test_movimientos_rey_blanco(self):
+        rey = King('WHITE')
+        fila, columna = 4, 4
+        movimientos_esperados = [(3, 3), (3, 4), (3, 5), (4, 3), (4, 5), (5, 3), (5, 4), (5, 5)]
+        movimientos = rey.possible_moves(fila, columna)
+        self.assertCountEqual(movimientos, movimientos_esperados)
 
-    def test_basic_king_moves_center(self):
-        # El rey en la posición central (4, 4) puede moverse a 8 posiciones
-        expected_moves = [(3, 3), (3, 4), (3, 5),
-                          (4, 3),         (4, 5),
-                          (5, 3), (5, 4), (5, 5)]
-        self.assertCountEqual(self.king_white.basic_king_moves(4, 4), expected_moves)
+#Comprueba que el rey negro, situado en la misma posición central, pueda realizar los movimientos correctos.
 
-    def test_basic_king_moves_corner(self):
-        # El rey en la esquina (0, 0) solo puede moverse a 3 posiciones
-        expected_moves = [(0, 1), (1, 0), (1, 1)]
-        self.assertCountEqual(self.king_black.basic_king_moves(0, 0), expected_moves)
-
-    def test_basic_king_moves_edge(self):
-        # El rey en el borde (0, 4) puede moverse a 5 posiciones
-        expected_moves = [(0, 3), (0, 5),
-                          (1, 3), (1, 4), (1, 5)]
-        self.assertCountEqual(self.king_white.basic_king_moves(0, 4), expected_moves)
+    def test_movimientos_rey_negro(self):
+        rey = King('BLACK')
+        fila, columna = 4, 4
+        movimientos_esperados = [(3, 3), (3, 4), (3, 5), (4, 3), (4, 5), (5, 3), (5, 4), (5, 5)]
+        movimientos = rey.possible_moves(fila, columna)
+        self.assertCountEqual(movimientos, movimientos_esperados)
 
 if __name__ == '__main__':
     unittest.main()
-

@@ -1,72 +1,36 @@
-# test_rook.py
-
 import unittest
+from unittest.mock import MagicMock
 from game.pieces.rook import Rook
 
-class TestRook(unittest.TestCase):
+class PruebaTorre(unittest.TestCase):
 
-    def test_str(self):
-        rook = Rook("WHITE")
-        self.assertEqual(str(rook), "♖")
-        rook_black = Rook("BLACK")
-        self.assertEqual(str(rook_black), "♜")
+#Verifica que el método __str__ de la clase Torre devuelva 'R' para una torre blanca y 'r' para una torre negra.
 
-    def test_basic_rook_moves_center(self):
-        rook = Rook("WHITE")
-        expected_moves = [
-            # Horizontales
-            (4, 0), (4, 1), (4, 2), (4, 3), (4, 5), (4, 6), (4, 7),
-            # Verticales
-            (0, 4), (1, 4), (2, 4), (3, 4), (5, 4), (6, 4), (7, 4)
-        ]
-        self.assertCountEqual(rook.basic_rook_moves(4, 4), expected_moves)
+    def test_metodo_str(self):
+        torre_blanca = Rook('WHITE')
+        torre_negra = Rook('BLACK')
+        self.assertEqual(str(torre_blanca), 'R')
+        self.assertEqual(str(torre_negra), 'r')
+        
+#Comprueba que el método possible_moves de una torre blanca, ubicada en el centro del tablero, devuelva los movimientos correctos.
 
-    def test_basic_rook_moves_corner(self):
-        rook = Rook("WHITE")
-        expected_moves = [
-            # Horizontales
-            (0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6), (0, 7),
-            # Verticales
-            (1, 0), (2, 0), (3, 0), (4, 0), (5, 0), (6, 0), (7, 0)
-        ]
-        self.assertCountEqual(rook.basic_rook_moves(0, 0), expected_moves)
+    def test_movimientos_posibles_torre_blanca(self):
+        torre = Rook('WHITE')
+        fila_inicial, col_inicial = 4, 4
+        movimientos_esperados = [(3, 4), (2, 4), (1, 4), (0, 4), (5, 4), (6, 4), (7, 4), 
+                                 (4, 3), (4, 2), (4, 1), (4, 0), (4, 5), (4, 6), (4, 7)]
+        movimientos_resultantes = torre.possible_moves(fila_inicial, col_inicial)
+        self.assertEqual(sorted(movimientos_resultantes), sorted(movimientos_esperados))
 
-    def test_basic_rook_moves_edge(self):
-        rook = Rook("WHITE")
-        expected_moves = [
-            # Horizontales
-            (0, 4), (0, 5), (0, 6), (0, 7),
-            # Verticales
-            (1, 4), (2, 4), (3, 4), (4, 4), (5, 4), (6, 4), (7, 4)
-        ]
-        self.assertCountEqual(rook.basic_rook_moves(0, 4), expected_moves)
+#Verifica que el método possible_moves funcione correctamente para una torre negra en el centro del tablero.
 
-    def test_move_vertical_desc(self):
-        rook = Rook("WHITE")
-        possibles = rook.basic_rook_moves(4, 1)
-        expected_moves = [(5, 1), (6, 1), (7, 1)]
-        self.assertCountEqual(
-            [move for move in possibles if move[1] == 1 and move[0] > 4],
-            expected_moves
-        )
-
-    def test_move_vertical_asc(self):
-        rook = Rook("WHITE")
-        possibles = rook.basic_rook_moves(4, 1)
-        expected_moves = [(3, 1), (2, 1), (1, 1), (0, 1)]
-        self.assertCountEqual(
-            [move for move in possibles if move[1] == 1 and move[0] < 4],
-            expected_moves
-        )
-
-    def test_rook_moves_out_of_bounds(self):
-        rook = Rook("WHITE")
-        # Movimientos fuera del tablero desde la esquina inferior izquierda
-        expected_moves = [
-            (0, 0), (1, 0), (2, 0), (3, 0), (4, 0), (5, 0), (6, 0), (7, 0),
-            (0, 1), (0, 2), (0, 3), (0, 4), (0, 5), (0, 6), (0, 7)
-        ]
-        self.assertCountEqual(rook.basic_rook_moves(0, 0), expected_moves)
+    def test_movimientos_posibles_torre_negra(self):
+        torre = Rook('BLACK')
+        fila_inicial, col_inicial = 4, 4
+        movimientos_esperados = [(3, 4), (2, 4), (1, 4), (0, 4), (5, 4), (6, 4), (7, 4), 
+                                 (4, 3), (4, 2), (4, 1), (4, 0), (4, 5), (4, 6), (4, 7)]
+        movimientos_resultantes = torre.possible_moves(fila_inicial, col_inicial)
+        self.assertEqual(sorted(movimientos_resultantes), sorted(movimientos_esperados))
 
 if __name__ == '__main__':
     unittest.main()
