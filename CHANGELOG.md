@@ -1,3 +1,9 @@
+## [3.01] - 09-25-24
+Change in test_pieces
+
+## [3.00] - 09-24-24
+Change in exeptions
+
 ## [2.10] - 09-23-24
 Change in all pieces and test
 
