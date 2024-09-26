@@ -1,57 +1,46 @@
-# test_pawn.py
-
 import unittest
 from game.pieces.pawn import Pawn
 
-class TestPawn(unittest.TestCase):
+class VerificarPeon(unittest.TestCase):
 
-    def setUp(self):
-        self.pawn_white = Pawn("WHITE")
-        self.pawn_black = Pawn("BLACK")
+# Verifica que el método __str__ del Peón devuelva 'P' para un peón blanco y 'p' para uno negro.
+    def test_metodo_str(self):
+        peon_blanco = Pawn('WHITE')
+        peon_negro = Pawn('BLACK')
+        self.assertEqual(str(peon_blanco), 'P')
+        self.assertEqual(str(peon_negro), 'p')
 
-    def test_str(self):
-        self.assertEqual(str(self.pawn_white), "♙")
-        self.assertEqual(str(self.pawn_black), "♟︎")
+#Evalúa los posibles movimientos del peón blanco desde varias posiciones. Llama al método possible_moves con diferentes posiciones iniciales y compara los movimientos obtenidos
+    def test_movimientos_peon_blanco(self):
+        peon = Pawn('WHITE')
+        # Movimientos desde la posición inicial (6, 3)
+        movimientos_esperados_inicial = [(5, 3), (4, 3)]
+        self.assertEqual(peon.possible_moves(6, 3), movimientos_esperados_inicial)
+        
+        # Movimientos desde una posición intermedia (5, 3)
+        movimientos_esperados_intermedios = [(4, 3), (4, 2), (4, 4)]  # Incluye movimientos diagonales
+        self.assertEqual(peon.possible_moves(5, 3), movimientos_esperados_intermedios)
+        
+        # Verifica los movimientos diagonales desde (5, 3)
+        movimientos = peon.possible_moves(5, 3)
+        self.assertIn((4, 2), movimientos)
+        self.assertIn((4, 4), movimientos)
 
-    def test_basic_pawn_moves_white_initial(self):
-        # Un peón blanco en la fila 6 (posición inicial) puede mover dos casillas hacia adelante
-        expected_moves = [(5, 0), (4, 0)]
-        self.assertCountEqual(self.pawn_white.basic_pawn_moves(6, 0), expected_moves)
-
-    def test_basic_pawn_moves_white_non_initial(self):
-        # Un peón blanco no en posición inicial solo puede mover una casilla hacia adelante
-        expected_moves = [(5, 0)]
-        self.assertCountEqual(self.pawn_white.basic_pawn_moves(5, 0), expected_moves)
-
-    def test_basic_pawn_moves_black_initial(self):
-        # Un peón negro en la fila 1 (posición inicial) puede mover dos casillas hacia adelante
-        expected_moves = [(2, 0), (3, 0)]
-        self.assertCountEqual(self.pawn_black.basic_pawn_moves(1, 0), expected_moves)
-
-    def test_basic_pawn_moves_black_non_initial(self):
-        # Un peón negro no en posición inicial solo puede mover una casilla hacia adelante
-        expected_moves = [(2, 0)]
-        self.assertCountEqual(self.pawn_black.basic_pawn_moves(2, 0), expected_moves)
-
-    def test_pawn_moves_out_of_bounds_white(self):
-        # Un peón blanco en la última fila no puede moverse más hacia adelante
-        expected_moves = []
-        self.assertCountEqual(self.pawn_white.basic_pawn_moves(0, 0), expected_moves)
-
-    def test_pawn_moves_out_of_bounds_black(self):
-        # Un peón negro en la última fila no puede moverse más hacia adelante
-        expected_moves = []
-        self.assertCountEqual(self.pawn_black.basic_pawn_moves(7, 0), expected_moves)
-
-    def test_pawn_capture_moves_white(self):
-        # Suponiendo que el método `basic_pawn_moves` incluye capturas (si es así)
-        # Por simplicidad, este test solo verifica movimientos básicos
-        pass  # Implementar si el método maneja capturas
-
-    def test_pawn_capture_moves_black(self):
-        # Suponiendo que el método `basic_pawn_moves` incluye capturas (si es así)
-        # Por simplicidad, este test solo verifica movimientos básicos
-        pass  # Implementar si el método maneja capturas
+#Evalúa los posibles movimientos del peón negro desde varias posiciones. Llama al método possible_moves con diferentes posiciones iniciales y compara los movimientos obtenidos.
+    def test_movimientos_peon_negro(self):
+        peon = Pawn('BLACK')
+        # Movimientos desde la posición inicial (1, 3)
+        movimientos_esperados_inicial = [(2, 3), (3, 3)]
+        self.assertEqual(peon.possible_moves(1, 3), movimientos_esperados_inicial)
+        
+        # Movimientos desde una posición intermedia (2, 3)
+        movimientos_esperados_intermedios = [(3, 3), (3, 2), (3, 4)]  # Incluye movimientos diagonales
+        self.assertEqual(peon.possible_moves(2, 3), movimientos_esperados_intermedios)
+        
+        # Verifica los movimientos diagonales desde (2, 3)
+        movimientos = peon.possible_moves(2, 3)
+        self.assertIn((3, 2), movimientos)
+        self.assertIn((3, 4), movimientos)
 
 if __name__ == '__main__':
     unittest.main()

@@ -1,42 +1,36 @@
-# test_bishop.py
-
 import unittest
 from game.pieces.bishop import Bishop
 
-class TestBishop(unittest.TestCase):
+class VerificarAlfil(unittest.TestCase):
 
-    def setUp(self):
-        self.bishop_white = Bishop("WHITE")
-        self.bishop_black = Bishop("BLACK")
+#Prueba que el método __str__ del Alfil devuelva 'B' si es blanco y 'b' si es negro.
+    def test_representacion_str(self):
+        alfil_blanco = Bishop('WHITE')
+        alfil_negro = Bishop('BLACK')
+        self.assertEqual(str(alfil_blanco), 'B')
+        self.assertEqual(str(alfil_negro), 'b')
 
-    def test_str(self):
-        self.assertEqual(str(self.bishop_white), "♗")
-        self.assertEqual(str(self.bishop_black), "♝")
-
-    def test_basic_bishop_moves_center(self):
-        # El alfil en la posición central (4, 4) tiene movimientos diagonales
-        expected_moves = [
-            (3, 3), (2, 2), (1, 1), (0, 0),
-            (3, 5), (2, 6), (1, 7),
-            (5, 3), (6, 2), (7, 1),
-            (5, 5), (6, 6), (7, 7)
+#Evalúa los movimientos permitidos de un alfil blanco desde el centro del tablero. Llama al método possible_moves con una fila y columna iniciales, y verifica que los movimientos devueltos sean los esperados.
+    def test_movimientos_disponibles_blanco(self):
+        alfil = Bishop('WHITE')
+        movimientos_esperados = [
+            (2, 2), (1, 1), (0, 0),  # Diagonal superior izquierda
+            (2, 4), (1, 5), (0, 6),  # Diagonal superior derecha
+            (4, 2), (5, 1), (6, 0),  # Diagonal inferior izquierda
+            (4, 4), (5, 5), (6, 6), (7, 7)  # Diagonal inferior derecha
         ]
-        self.assertCountEqual(self.bishop_white.basic_bishop_moves(4, 4), expected_moves)
+        self.assertEqual(alfil.possible_moves(3, 3), movimientos_esperados)
 
-    def test_basic_bishop_moves_corner(self):
-        # El alfil en la esquina (0, 0) solo puede moverse en una diagonal
-        expected_moves = [
-            (1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (6, 6), (7, 7)
+# Verifica los movimientos permitidos de un alfil negro desde el centro del tablero.Llama al método possible_moves con una fila y columna iniciales, y compara los movimientos obtenidos con los esperados.
+    def test_movimientos_disponibles_negro(self):
+        alfil = Bishop('BLACK')
+        movimientos_esperados = [
+            (2, 2), (1, 1), (0, 0),  # Diagonal superior izquierda
+            (2, 4), (1, 5), (0, 6),  # Diagonal superior derecha
+            (4, 2), (5, 1), (6, 0),  # Diagonal inferior izquierda
+            (4, 4), (5, 5), (6, 6), (7, 7)  # Diagonal inferior derecha
         ]
-        self.assertCountEqual(self.bishop_black.basic_bishop_moves(0, 0), expected_moves)
-
-    def test_basic_bishop_moves_edge(self):
-        # El alfil en el borde (0, 4) puede moverse en dos diagonales
-        expected_moves = [
-            (1, 3), (2, 2), (3, 1), (4, 0),
-            (1, 5), (2, 6), (3, 7)
-        ]
-        self.assertCountEqual(self.bishop_white.basic_bishop_moves(0, 4), expected_moves)
+        self.assertEqual(alfil.possible_moves(3, 3), movimientos_esperados)
 
 if __name__ == '__main__':
     unittest.main()

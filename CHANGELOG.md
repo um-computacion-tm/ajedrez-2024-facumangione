@@ -1,5 +1,8 @@
+## [3.02] - 09-26-24
+Change in test_pieces (pawn,bishop,knight,pieces)
+
 ## [3.01] - 09-25-24
-Change in test_pieces
+Change in test_pieces (queen,king,rook)
 
 ## [3.00] - 09-24-24
 Change in exeptions
