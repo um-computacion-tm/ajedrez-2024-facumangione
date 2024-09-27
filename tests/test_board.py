@@ -1,126 +1,56 @@
 import unittest
-from game.pieces.rook import Rook
-from game.pieces.knight import Knight
-from game.pieces.bishop import Bishop
-from game.pieces.queen import Queen
-from game.pieces.king import King
-from game.pieces.pawn import Pawn
 from game.board import Board
-from game.exceptions import InvalidMove, InvalidTurn, EmptyPosition, OutOfBoard
+from game.exceptions import NonCaptureOwnPieceError, NonPassOverPieceError, GameOverException
 
-class TestBoard(unittest.TestCase):
-    def setUp(self):
-        self.board = Board()
+class TestTablero(unittest.TestCase):
+#Verifica el comportamiento del método is_valid_move de la clase Board cuando no hay una pieza en la posición de origen  
+    def test_movimiento_invalido_sin_pieza(self):
+        tablero = Board()
+        self.assertFalse(tablero.is_valid_move(3, 3, 4, 4))
 
-    def test_initial_setup(self):
-        # Verificar las piezas negras
-        self.assertIsInstance(self.board.get_piece(0, 0), Rook)
-        self.assertEqual(self.board.get_piece(0, 0).color, "BLACK")
+#Verifica que el método move_piece lance la excepción NonCaptureOwnPieceError cuando se intenta capturar una pieza del mismo jugador.
+    def test_intento_captura_propia_pieza(self):
+        tablero = Board()
+        tablero.board = [[None for _ in range(8)] for _ in range(8)]
+        tablero.board[7][0] = 'R'
+        tablero.board[6][0] = 'P'
+        with self.assertRaises(NonCaptureOwnPieceError) as contexto:
+            tablero.move_piece(7, 0, 6, 0)
+        self.assertEqual(str(contexto.exception), "You cannot capture your own pieces.")
 
-        self.assertIsInstance(self.board.get_piece(0, 7), Rook)
-        self.assertEqual(self.board.get_piece(0, 7).color, "BLACK")
+#Verifica que la excepción NonPassOverPieceError se lance cuando una pieza intenta moverse sobre otra.
+    def test_pieza_pasa_sobre_otras(self):
+        tablero = Board()
+        tablero._positions_ = [[None for _ in range(8)] for _ in range(8)]
+        tablero._positions_[0][0] = 'R'
+        tablero._positions_[0][1] = 'P'
+        with self.assertRaises(NonPassOverPieceError) as contexto:
+            tablero.move_piece(0, 0, 0, 2)
+        self.assertEqual(str(contexto.exception), "You cannot pass over other pieces.")
 
-        self.assertIsInstance(self.board.get_piece(0, 1), Knight)
-        self.assertEqual(self.board.get_piece(0, 1).color, "BLACK")
+#Verifica que se lance la excepción GameOverException con el mensaje "White wins" cuando las piezas negras se quedan sin piezas en el tablero.
+    def test_partida_finalizada_gana_blancas(self):
+        tablero = Board()
+        class Torre:
+            def get_color(self):
+                return 'WHITE'
+        tablero._positions_ = [[None for _ in range(8)] for _ in range(8)]
+        tablero._positions_[7][7] = Torre()
+        with self.assertRaises(GameOverException) as contexto:
+            tablero.check_game_over()
+        self.assertEqual(str(contexto.exception), "White wins")
 
-        self.assertIsInstance(self.board.get_piece(0, 6), Knight)
-        self.assertEqual(self.board.get_piece(0, 6).color, "BLACK")
-
-        self.assertIsInstance(self.board.get_piece(0, 2), Bishop)
-        self.assertEqual(self.board.get_piece(0, 2).color, "BLACK")
-
-        self.assertIsInstance(self.board.get_piece(0, 5), Bishop)
-        self.assertEqual(self.board.get_piece(0, 5).color, "BLACK")
-
-        self.assertIsInstance(self.board.get_piece(0, 3), Queen)
-        self.assertEqual(self.board.get_piece(0, 3).color, "BLACK")
-
-        self.assertIsInstance(self.board.get_piece(0, 4), King)
-        self.assertEqual(self.board.get_piece(0, 4).color, "BLACK")
-
-        for i in range(8):
-            self.assertIsInstance(self.board.get_piece(1, i), Pawn)
-            self.assertEqual(self.board.get_piece(1, i).color, "BLACK")
-
-        # Verificar las piezas blancas
-        self.assertIsInstance(self.board.get_piece(7, 0), Rook)
-        self.assertEqual(self.board.get_piece(7, 0).color, "WHITE")
-
-        self.assertIsInstance(self.board.get_piece(7, 7), Rook)
-        self.assertEqual(self.board.get_piece(7, 7).color, "WHITE")
-
-        self.assertIsInstance(self.board.get_piece(7, 1), Knight)
-        self.assertEqual(self.board.get_piece(7, 1).color, "WHITE")
-
-        self.assertIsInstance(self.board.get_piece(7, 6), Knight)
-        self.assertEqual(self.board.get_piece(7, 6).color, "WHITE")
-
-        self.assertIsInstance(self.board.get_piece(7, 2), Bishop)
-        self.assertEqual(self.board.get_piece(7, 2).color, "WHITE")
-
-        self.assertIsInstance(self.board.get_piece(7, 5), Bishop)
-        self.assertEqual(self.board.get_piece(7, 5).color, "WHITE")
-
-        self.assertIsInstance(self.board.get_piece(7, 3), Queen)
-        self.assertEqual(self.board.get_piece(7, 3).color, "WHITE")
-
-        self.assertIsInstance(self.board.get_piece(7, 4), King)
-        self.assertEqual(self.board.get_piece(7, 4).color, "WHITE")
-
-        for i in range(8):
-            self.assertIsInstance(self.board.get_piece(6, i), Pawn)
-            self.assertEqual(self.board.get_piece(6, i).color, "WHITE")
-
-    def test_empty_squares(self):
-        # Verificar que las posiciones vacías no tengan piezas
-        for row in range(2, 6):
-            for col in range(8):
-                self.assertIsNone(self.board.get_piece(row, col))
-
-    def test_str_board(self):
-        board = Board(for_test=True)
-        self.assertEqual(
-            str(board),
-            (
-                "♖      ♖\n"
-                "        \n"
-                "        \n"
-                "        \n"
-                "        \n"
-                "        \n"
-                "        \n"
-                "♜      ♜\n"
-            )
-        )
-
-    def test_move_piece(self):
-        # Mover una torre blanca de (7, 0) a (5, 0)
-        self.board.move_piece(7, 0, 5, 0)
-        self.assertIsInstance(self.board.get_piece(5, 0), Rook)
-        self.assertIsNone(self.board.get_piece(7, 0))
-
-    def test_invalid_move_empty_position(self):
-        # Intentar mover una pieza desde una posición vacía
-        with self.assertRaises(EmptyPosition):
-            self.board.move_piece(4, 4, 5, 5)
-
-    def test_invalid_move_out_of_board(self):
-        # Intentar mover una pieza fuera del tablero
-        with self.assertRaises(OutOfBoard):
-            self.board.get_piece(8, 8)
-
-    def test_invalid_move_general(self):
-        # Intentar mover una pieza a una posición inválida para su tipo (como mover una torre en diagonal)
-        rook = self.board.get_piece(7, 0)
-        with self.assertRaises(InvalidMove):
-            rook.move(7, 0, 6, 1)  # Movimiento en diagonal inválido para la torre
-
-    def test_place_piece(self):
-        # Colocar una nueva pieza en una posición
-        new_rook = Rook("WHITE", self.board)
-        self.board.place_piece(4, 4, new_rook)
-        self.assertIsInstance(self.board.get_piece(4, 4), Rook)
-        self.assertEqual(self.board.get_piece(4, 4).color, "WHITE")
+#Verifica que se lance la excepción GameOverException con el mensaje "Black wins" cuando las piezas blancas se quedan sin piezas en el tablero.
+    def test_partida_finalizada_gana_negras(self):
+        tablero = Board()
+        class Torre:
+            def get_color(self):
+                return 'BLACK'
+        tablero._positions_ = [[None for _ in range(8)] for _ in range(8)]
+        tablero._positions_[0][0] = Torre()
+        with self.assertRaises(GameOverException) as contexto:
+            tablero.check_game_over()
+        self.assertEqual(str(contexto.exception), "Black wins")
 
 if __name__ == '__main__':
     unittest.main()

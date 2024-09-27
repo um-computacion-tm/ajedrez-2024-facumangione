@@ -1,3 +1,6 @@
+## [3.03] - 09-27-24
+Change in test_board, test_chess
+
 ## [3.02] - 09-26-24
 Change in test_pieces (pawn,bishop,knight,pieces)
 
