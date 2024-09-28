@@ -1,3 +1,6 @@
+## [3.04] - 09-28-24
+Change in test_cli
+
 ## [3.03] - 09-27-24
 Change in test_board, test_chess
 

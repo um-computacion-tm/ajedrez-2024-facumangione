@@ -1,49 +1,124 @@
 import unittest
-from unittest.mock import patch
-from game.chess import Chess
-from game.cli import play
+from io import StringIO
+from game.cli import play, show_board_with_icons
+from unittest.mock import patch, MagicMock
 
 class TestCli(unittest.TestCase):
 
-    @patch('builtins.input', side_effect=['1', '1', '2', '2'])
-    @patch('builtins.print')
-    @patch.object(Chess, 'move')
-    def test_happy_path(self, mock_chess_move, mock_print, mock_input):
-        chess = Chess()
-        play(chess)
-        self.assertEqual(mock_input.call_count, 4)
-        self.assertEqual(mock_print.call_count, 3)  # Considerando que imprime el tablero y el turno
-        self.assertEqual(mock_chess_move.call_count, 1)
+    @patch('sys.stdout', new_callable=StringIO)
+    def test_show_board_with_icons(self, mock_stdout):
+        board = [
+            ['R', 'N', 'B', 'Q', 'K', 'B', 'N', 'R'],
+            ['P', 'P', 'P', 'P', 'P', 'P', 'P', 'P'],
+            ['.', '.', '.', '.', '.', '.', '.', '.'],
+            ['.', '.', '.', '.', '.', '.', '.', '.'],
+            ['.', '.', '.', '.', '.', '.', '.', '.'],
+            ['.', '.', '.', '.', '.', '.', '.', '.'],
+            ['p', 'p', 'p', 'p', 'p', 'p', 'p', 'p'],
+            ['r', 'n', 'b', 'q', 'k', 'b', 'n', 'r']
+        ]
+        show_board_with_icons(board)
+        expected_output = (
+            '♜ ♞ ♝ ♛ ♚ ♝ ♞ ♜\n'
+            '♟ ♟ ♟ ♟ ♟ ♟ ♟ ♟\n'
+            '· · · · · · · ·\n'
+            '· · · · · · · ·\n'
+            '· · · · · · · ·\n'
+            '· · · · · · · ·\n'
+            '♙ ♙ ♙ ♙ ♙ ♙ ♙ ♙\n'
+            '♖ ♘ ♗ ♕ ♔ ♗ ♘ ♖\n'
+        )
+        self.assertEqual(mock_stdout.getvalue(), expected_output)
 
-    @patch('builtins.input', side_effect=['hola', '1', '2', '2'])
-    @patch('builtins.print')
-    @patch.object(Chess, 'move')
-    def test_not_happy_path(self, mock_chess_move, mock_print, mock_input):
-        chess = Chess()
-        play(chess)
-        self.assertEqual(mock_input.call_count, 4)
-        self.assertEqual(mock_print.call_count, 4)  # Se imprime un mensaje de error adicional
-        self.assertEqual(mock_chess_move.call_count, 0)
+    @patch('sys.stdout', new_callable=StringIO)
+    @patch('builtins.input', side_effect=['EXIT'])
+    def test_exit_game(self, mock_input, mock_stdout):
+        chess = MagicMock()
+        with self.assertRaises(SystemExit):
+            play(chess)
+        self.assertIn("Game over.", mock_stdout.getvalue())
 
-    @patch('builtins.input', side_effect=['1', '1', '2', 'hola'])
-    @patch('builtins.print')
-    @patch.object(Chess, 'move')
-    def test_more_not_happy_path(self, mock_chess_move, mock_print, mock_input):
-        chess = Chess()
-        play(chess)
-        self.assertEqual(mock_input.call_count, 4)
-        self.assertEqual(mock_print.call_count, 4)  # Se imprime un mensaje de error adicional
-        self.assertEqual(mock_chess_move.call_count, 0)
+    @patch('sys.stdout', new_callable=StringIO)
+    @patch('builtins.input', side_effect=['1', 'EXIT'])
+    def test_exit_mid_game(self, mock_input, mock_stdout):
+        chess = MagicMock()
+        with self.assertRaises(SystemExit):
+            play(chess)
+        self.assertIn("Game over.", mock_stdout.getvalue())
 
-    @patch('builtins.input', side_effect=['1', '1', '2', '1'])
-    @patch('builtins.print')
-    @patch.object(Chess, 'move', side_effect=Exception("InvalidMove"))
-    def test_invalid_move(self, mock_chess_move, mock_print, mock_input):
-        chess = Chess()
+    @patch('sys.stdout', new_callable=StringIO)
+    @patch('builtins.input', side_effect=['1', '1', 'EXIT'])
+    def test_exit_later(self, mock_input, mock_stdout):
+        chess = MagicMock()
+        with self.assertRaises(SystemExit):
+            play(chess)
+        self.assertIn("Game over.", mock_stdout.getvalue())
+
+    @patch('sys.stdout', new_callable=StringIO)
+    @patch('builtins.input', side_effect=['6', '0', '4', '0'])
+    @patch('cli.show_board_with_icons')
+    def test_valid_move_pawn(self, mock_show_board, mock_input, mock_stdout):
+        chess = MagicMock()
+        chess.get_board.return_value = [['.']*8 for _ in range(8)]
+        chess.turn = 'white'
         play(chess)
-        self.assertEqual(mock_input.call_count, 4)
-        self.assertEqual(mock_print.call_count, 4)  # Se imprime el tablero, el turno y un mensaje de error
-        self.assertEqual(mock_chess_move.call_count, 1)
+        chess.move.assert_called_with(6, 0, 4, 0)
+
+    @patch('sys.stdout', new_callable=StringIO)
+    @patch('builtins.input', side_effect=['7', '1', '5', '0'])
+    @patch('cli.show_board_with_icons')
+    def test_valid_move_knight1(self, mock_show_board, mock_input, mock_stdout):
+        chess = MagicMock()
+        chess.get_board.return_value = [['.']*8 for _ in range(8)]
+        chess.turn = 'white'
+        play(chess)
+        chess.move.assert_called_with(7, 1, 5, 0)
+
+    @patch('sys.stdout', new_callable=StringIO)
+    @patch('builtins.input', side_effect=['7', '1', '5', '0'])
+    def test_valid_move_knight_black(self, mock_stdout, mock_input):
+        chess = MagicMock()
+        chess.get_board.return_value = [['.']*8 for _ in range(8)]
+        chess.turn = 'black'
+        play(chess)
+        chess.move.assert_called_with(7, 1, 5, 0)
+
+    @patch('sys.stdout', new_callable=StringIO)
+    @patch('builtins.input', side_effect=['0', '0', '8', '1'])
+    def test_invalid_coordinates(self, mock_stdout, mock_input):
+        chess = MagicMock()
+        chess.get_board.return_value = [['.']*8 for _ in range(8)]
+        chess.turn = 'white'
+        play(chess)
+        self.assertIn("Row and column values must be between 0 and 7.", mock_stdout.getvalue())
+
+    @patch('builtins.input', side_effect=['&', '0', '1', '1'])
+    def test_symbol_coordinates(self, mock_input):
+        chess = MagicMock()
+        chess.get_board.return_value = [['.']*8 for _ in range(8)]
+        chess.turn = 'white'
+        with patch('sys.stdout', new_callable=StringIO) as mock_stdout:
+            play(chess)
+            self.assertIn("You must enter numeric values between 0 and 7.", mock_stdout.getvalue())
+
+    @patch('sys.stdout', new_callable=StringIO)
+    @patch('builtins.input', side_effect=['a', 'b', 'c', 'd', 'EXIT'])
+    def test_non_numeric_input(self, mock_stdout, mock_input):
+        chess = MagicMock()
+        chess.get_board.return_value = [['.']*8 for _ in range(8)]
+        chess.turn = 'white'
+        play(chess)
+        self.assertIn("You must enter numeric values between 0 and 7.", mock_stdout.getvalue())
+
+    @patch('sys.stdout', new_callable=StringIO)
+    @patch('builtins.input', side_effect=['7', '1', '5', '0', 'EXIT'])
+    def test_valid_move_then_exit(self, mock_stdout, mock_input):
+        chess = MagicMock()
+        chess.get_board.return_value = [['.']*8 for _ in range(8)]
+        chess.turn = 'white'
+        play(chess)
+        chess.move.assert_called_with(7, 1, 5, 0)
+        self.assertIn("Game over.", mock_stdout.getvalue())
 
 if __name__ == '__main__':
     unittest.main()
