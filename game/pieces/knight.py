@@ -1,20 +1,28 @@
 from piece import Piece
 
 class Knight(Piece):
-    white_str = "♘"
-    black_str = "♞"
 
-    def get_possible_positions(self, from_row, from_col):
-        return self.basic_knight_moves(from_row, from_col)
+    # Método que representa al caballero en el tablero
+    def __str__(self):
+        #Devuelve 'N' si el caballero es blanco y 'n' si es negro.
+        return 'N' if self.color == 'WHITE' else 'n'
 
-    def basic_knight_moves(self, row, col):
-        # Definir las posiciones en forma de "L" que puede tomar el caballo
-        moves = [
-            (row + 2, col + 1), (row + 2, col - 1),
-            (row - 2, col + 1), (row - 2, col - 1),
-            (row + 1, col + 2), (row + 1, col - 2),
-            (row - 1, col + 2), (row - 1, col - 2),
-        ]
+    # Método que genera las direcciones de movimiento del caballero
+    def generate_knight_directions(self):
+        #Devuelve una lista de direcciones en las que el caballero puede moverse.
+        directions = []
+        moves = [2, 1, -1, -2]
+        for i in moves:
+            for j in moves:
+                if abs(i) != abs(j):
+                    directions.append((i, j))
+        return directions
 
-        # Filtrar solo las posiciones que estén dentro del tablero
-        return [(r, c) for r, c in moves if 0 <= r < 8 and 0 <= c < 8]
+    # Método que devuelve los movimientos posibles del caballero
+    def possible_moves(self, from_row, from_col):
+
+        #Devuelve los movimientos posibles del caballero desde una posición actual.
+        #Utiliza las direcciones generadas por generate_knight_directions.
+    
+        directions = self.generate_knight_directions()
+        return self.possible_moves_general(from_row, from_col, directions)

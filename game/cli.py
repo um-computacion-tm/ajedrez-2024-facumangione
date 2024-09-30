@@ -1,69 +1,79 @@
-from game.chess import Chess
-from exceptions import InvalidMove, InvalidTurn, EmptyPosition
+from chess import Chess
+from exceptions import InvalidMove, OutOfBoundsError, NonNumericInputError, GameOverException
 
-def main():
-    chess = Chess()
-    while chess.is_playing():
-        play(chess)
-        if check_game_over(chess):
-            break
-
-def play(chess):
-    try:
-        print(chess.show_board())  # Mostrar el tablero
-        print("Turn: ", "White" if chess.turn == "WHITE" else "Black")
-
-        # Mostrar movimientos válidos para la pieza seleccionada (opcional)
-        from_row = get_input("From row: ")
-        from_col = get_input("From col: ")
-
-        show_valid_moves(chess, from_row, from_col)
-
-        to_row = get_input("To row: ")
-        to_col = get_input("To col: ")
-
-        chess.move(from_row, from_col, to_row, to_col)
-        
-    except InvalidMove as e:
-        print("Invalid Move:", e)
-    except InvalidTurn as e:
-        print("Invalid Turn:", e)
-    except EmptyPosition as e:
-        print("Empty Position:", e)
-    except Exception as e:
-        print("Error:", e)
-
-def get_input(prompt):
+# Función principal del programa
+def start_game():
+    #La función start_game() es el punto de inicio del programa.
+    partida = Chess()
     while True:
         try:
-            val = int(input(f"{prompt} (0-7) or '9' to resign: "))
-            if val == 9:
-                return None  # Permite al jugador renunciar
-            if val not in range(8):
-                raise ValueError("Input out of bounds. Please enter a number between 0 and 7.")
-            return val
-        except ValueError as e:
-            print(e)
+            run_game(partida)
+        except GameOverException as game_end:
+            print(str(game_end))
+            exit()
 
-def show_valid_moves(chess, from_row, from_col):
-    piece = chess.board.get_piece(from_row, from_col)
-    if piece and piece.color == chess.turn:
-        valid_moves = piece.get_valid_moves(chess.board)
-        print(f"Valid moves for {piece}: {valid_moves}")
-    else:
-        print("No valid moves or wrong piece selected.")
+# Muestra el tablero con íconos de piezas
+def render_board_with_icons(tablero):
+    #La función render_board_with_icons() muestra el tablero de ajedrez utilizando íconos para representar las piezas.
+    # Mapeo de piezas a íconos
+    piezas_icons = {
+        'R': '♜', 'N': '♞', 'B': '♝', 'Q': '♛', 'K': '♚', 'P': '♟',
+        'r': '♖', 'n': '♘', 'b': '♗', 'q': '♕', 'k': '♔', 'p': '♙',
+        '.': '·'  # Casilla vacía
+    }
+    # Reemplazar letras por íconos
+    for fila in tablero:
+        print(' '.join(piezas_icons[pieza] for pieza in fila))
 
-def check_game_over(chess):
-    if chess.is_checkmate("WHITE"):
-        print("Checkmate! Black wins!")
-        return True
-    elif chess.is_checkmate("BLACK"):
-        print("Checkmate! White wins!")
-        return True
-    elif chess.is_stalemate("WHITE") or chess.is_stalemate("BLACK"):
-        print("Stalemate! It's a draw!")
-        return True
-    return False
+# Lógica del juego de ajedrez
+def run_game(partida):
+    #La función run_game() gestiona los movimientos durante una partida de ajedrez.
+    try:
+        # Mostrar el tablero y el turno actual, luego solicitar coordenadas
+        render_board_with_icons(partida.get_board())
+        print("Indica las coordenadas de la pieza que quieres mover y su destino.")
+        print("Escribe EXIT para finalizar la partida.")
+        print("Turno actual:", partida.turn)
+        
+        origen_fila = input("Fila de origen: ")
+        if origen_fila.upper() == "EXIT":
+            print("Juego terminado.")
+            exit()
+        
+        origen_columna = input("Columna de origen: ")
+        if origen_columna.upper() == "EXIT":
+            print("Juego terminado.")
+            exit()
 
-if __name__ == '__main__':
-    main()
+        destino_fila = input("Fila de destino: ")
+        if destino_fila.upper() == "EXIT":
+            print("Juego terminado.")
+            exit()
+
+        destino_columna = input("Columna de destino: ")
+        if destino_columna.upper() == "EXIT":
+            print("Juego terminado.")
+            exit()
+
+        # Validar que las entradas sean numéricas
+        if not (origen_fila.isdigit() and origen_columna.isdigit() and destino_fila.isdigit() and destino_columna.isdigit()):
+            raise NonNumericInputError()
+
+        # Convertir las coordenadas a enteros
+        origen_fila = int(origen_fila)
+        origen_columna = int(origen_columna)
+        destino_fila = int(destino_fila)
+        destino_columna = int(destino_columna)
+
+        # Validar que las coordenadas estén dentro del rango
+        if not (0 <= origen_fila < 8 and 0 <= origen_columna < 8 and 0 <= destino_fila < 8 and 0 <= destino_columna < 8):
+            raise OutOfBoundsError()
+
+        # Ejecutar el movimiento de la pieza
+        partida.move(origen_fila, origen_columna, destino_fila, destino_columna)
+
+    except InvalidMove as error:
+        print("Movimiento inválido:", error)
+
+if __name__ == "__main__":
+    start_game()
