@@ -5,7 +5,7 @@ from game.exceptions import NonPieceOriginError, WrongTurnError, InvalidPieceMov
 class TestAjedrez(unittest.TestCase):
 #Esta función verifica que un objeto Chess se inicializa correctamente, asegurando que el turno inicial es de las piezas blancas y que el tablero esté bien configurado.
     def test_inicializacion(self):
-        partida = Chess()
+        partida = Chess()  
         self.assertEqual(partida.turn, "WHITE")
         tablero = partida.get_board()
         self.assertIsNotNone(tablero)

@@ -1,3 +1,12 @@
+## [3.06] - 09-28-24
+Change in board,chess and added pieces
+
+## [3.06] - 09-28-24
+Change in pieces(bishop,pawn,knight) and change in cli
+
+## [3.05] - 09-28-24
+Change in pieces (rook,queen,king)
+
 ## [3.04] - 09-28-24
 Change in test_cli
 
