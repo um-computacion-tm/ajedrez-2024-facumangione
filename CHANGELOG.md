@@ -1,10 +1,16 @@
-## [3.06] - 09-28-24
+## [3.06] - 10-06-24
 Change in board,chess and added pieces
 
-## [3.06] - 09-28-24
+## [3.06] - 10-01-24
+Change in board,chess and added pieces
+
+## [3.06] - 09-31-24
+Change in board,chess and added pieces
+
+## [3.06] - 09-30-24
 Change in pieces(bishop,pawn,knight) and change in cli
 
-## [3.05] - 09-28-24
+## [3.05] - 09-29-24
 Change in pieces (rook,queen,king)
 
 ## [3.04] - 09-28-24
