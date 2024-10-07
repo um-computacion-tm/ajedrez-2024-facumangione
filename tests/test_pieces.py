@@ -19,10 +19,8 @@ class VerificacionPieza(unittest.TestCase):
         pieza = Piece("WHITE")
         self.assertEqual(pieza.get_color(), "WHITE")
     
+    # Verifica que el método get_color devuelva "BLACK" cuando la pieza creada es de color negro.
     def test_obtener_color_pieza_negra(self):
-        '''
-        Verifica que el método get_color devuelva "BLACK" cuando la pieza creada es de color negro.
-        '''
         pieza = Piece("BLACK")
         self.assertEqual(pieza.get_color(), "BLACK")
 
