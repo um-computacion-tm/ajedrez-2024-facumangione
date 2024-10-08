@@ -114,7 +114,7 @@ class TestCli(unittest.TestCase):
         play(chess)
         self.assertIn("Entrada inválida. Por favor ingresa un número entre 0 y 7.", mock_stdout.getvalue())
     
-    # @patch('builtins.exit', side_effect=SystemExit)  # Simulamos `exit()` lanzando `SystemExit`
+    # @patch('sys.exit', side_effect=SystemExit) # Simulamos `exit()` lanzando `SystemExit`
     # @patch('builtins.input', side_effect=['7', '1', '5', '0', 'EXIT'])
     # @patch('sys.stdout', new_callable=StringIO)
     # def test_valid_move_then_exit(self, mock_stdout, mock_input, mock_exit):
@@ -135,7 +135,6 @@ class TestCli(unittest.TestCase):
 
     #     # Comprobamos la salida esperada
     #     self.assertIn("Juego terminado.", mock_stdout.getvalue())
-
 
 if __name__ == '__main__':
     unittest.main()
