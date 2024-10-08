@@ -1,4 +1,3 @@
-import sys
 from .chess import Chess
 from .exceptions import InvalidMove, OutOfBoundsError, NonNumericInputError, GameOverException, NonPieceOriginError, WrongTurnError, InvalidPieceMoveError
 
@@ -55,7 +54,7 @@ def obtener_input(prompt):
         valor = input(prompt)
         if valor.upper() == "EXIT":
             print("Juego terminado.")
-            sys.exit()  # Esto llama a exit
+            exit()  # Esto llama a exit
         if valor.isdigit() and 0 <= int(valor) < 8:
             return valor
         print("Entrada inválida. Por favor ingresa un número entre 0 y 7.")

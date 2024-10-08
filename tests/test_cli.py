@@ -1,5 +1,6 @@
 import unittest
 from io import StringIO
+from chess.chess import Chess
 from chess.cli import run_game as play, render_board_with_icons as show_board_with_icons
 from unittest.mock import patch, MagicMock, Mock
 from chess.exceptions import InvalidPieceMoveError
@@ -114,27 +115,26 @@ class TestCli(unittest.TestCase):
         play(chess)
         self.assertIn("Entrada inválida. Por favor ingresa un número entre 0 y 7.", mock_stdout.getvalue())
     
-    # @patch('sys.exit', side_effect=SystemExit) # Simulamos `exit()` lanzando `SystemExit`
-    # @patch('builtins.input', side_effect=['7', '1', '5', '0', 'EXIT'])
-    # @patch('sys.stdout', new_callable=StringIO)
-    # def test_valid_move_then_exit(self, mock_stdout, mock_input, mock_exit):
-    #     chess = MagicMock()
-    #     chess.get_board.return_value = [['.'] * 8 for _ in range(8)]
-    #     chess.turno = 'WHITE'
-    #     chess.realizar_movimiento.return_value = None  # Simulamos un movimiento exitoso
+    @patch('builtins.exit', side_effect=SystemExit)  # Simulamos `exit()` lanzando `SystemExit`
+    @patch('builtins.input', side_effect=['7', '1', '5', '0', 'EXIT'])
+    @patch('sys.stdout', new_callable=StringIO)
+    def test_valid_move_then_exit(self, mock_stdout, mock_input, mock_exit):
+        chess = MagicMock(spec=Chess)
+        chess.get_board.return_value = [['.'] * 8 for _ in range(8)]
+        chess.turno = 'WHITE'
+        chess.realizar_movimiento.return_value = None  # Simulamos un movimiento exitoso
+        play(chess)
 
-    #     # Intentamos que se levante SystemExit cuando se llama a `exit()`
-    #     with self.assertRaises(SystemExit):
-    #         play(chess)  # Ejecutamos el juego
+        # Verificamos que se realizó el movimiento correcto
+        chess.realizar_movimiento.assert_called_with(7, 1, 5, 0)
+        with self.assertRaises(SystemExit):
+            play(chess)  # Ejecutamos el juego
 
-    #     # Verificamos que se realizó el movimiento correcto
-    #     chess.realizar_movimiento.assert_called_with(7, 1, 5, 0)
+        # Verificamos que se haya llamado a `exit()`
+        mock_exit.assert_called_once()
 
-    #     # Verificamos que se haya llamado a `exit()`
-    #     mock_exit.assert_called_once()
-
-    #     # Comprobamos la salida esperada
-    #     self.assertIn("Juego terminado.", mock_stdout.getvalue())
+        # Comprobamos la salida esperada
+        self.assertIn("Juego terminado.", mock_stdout.getvalue())
 
 if __name__ == '__main__':
     unittest.main()
