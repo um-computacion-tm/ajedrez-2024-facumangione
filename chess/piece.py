@@ -1,19 +1,15 @@
+from .constants import QUEEN_KING_DIRECTIONS  # Importar las direcciones comunes
+
 class Piece:
     
-    # Constructor de la clase
     def __init__(self, color):
-        #Constructor de la clase.
         self._color_ = color
-        self._movimientos_dama_rey = [(-1, -1), (-1, 1), (1, -1), (1, 1), (-1, 0), (1, 0), (0, -1), (0, 1)]
+        self._movimientos_dama_rey = QUEEN_KING_DIRECTIONS  # Usar la constante de direcciones
     
-    # Obtener el color de la pieza
     def get_color(self):
-        #Esta función devuelve el valor del atributo privado _color de la pieza.
         return self._color_
 
-    # Movimientos posibles de las piezas
     def possible_moves_general(self, fila_inicio, columna_inicio, direcciones, un_paso=False):
-        #La función devuelve los movimientos posibles de la pieza desde su posición actual.
         movimientos = []
         for direccion in direcciones:
             nueva_fila, nueva_columna = fila_inicio, columna_inicio
